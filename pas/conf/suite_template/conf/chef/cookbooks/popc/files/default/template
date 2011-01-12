@@ -1,0 +1,19 @@
+n                   # Simple installation?
+33.33.33.10         # Master address, one per line
+                    # No more master
+                    # No more child nodes
+                    # Processors
+1                   # Jobs
+                    # RAM
+                    # Local user
+                    # Script to submit
+                    # Communication pattern
+POPC_IFACE          # Variable name
+eth1                # Variable value
+                    # No more variables
+y                   # Generate scripts?
+                    # Service port
+                    # Domain name
+                    # Temp directory
+                    # Return to confirm
+

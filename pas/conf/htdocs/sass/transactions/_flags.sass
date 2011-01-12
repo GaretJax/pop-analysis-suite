@@ -1,0 +1,51 @@
+
+.bubbles
+    display: inline-block
+    margin: 0 0
+    -webkit-user-select: none
+    cursor: default
+    
+    li
+        text-align: center
+        line-height: 10px
+        min-width: 35px
+        +box-sizing(border-box)
+        +border-radius(40px)
+        text-shadow: 1px 1px 0px #fff
+        font-size: 10px
+        display: inline-block
+        padding: 2px 8px
+        
+
+.flags li
+    vertical-align: 1px
+    color: #4870a9
+    background: #dff0ff
+    +box-shadow(rgba(193, 215, 233, .9), 0px, 1px, 0px)
+    
+.type li
+    vertical-align: 0px
+    color: #fff
+    background: #4870a9
+    text-shadow: 0 1px 0 #1d466b
+    font-family: "Lucida Grande"
+    font-size: 13px
+    padding: 2px 0
+    +box-shadow(rgba(29, 70, 107, .9), 0px, 1px, 0px)
+    
+    &.exc
+        vertical-align: 1px
+        font-size: 10px
+    
+    &.res
+        margin-right: 102px
+
+.semantics
+    min-width: 95px
+    
+    li
+        vertical-align: 1px
+        color: #e2f8d2
+        background: #41962e
+        text-shadow: 0 1px 0 #136400
+        +box-shadow(#136400, 0px, 1px, 0px)

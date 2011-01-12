@@ -1,0 +1,66 @@
+@import transactions/filter
+
+body > nav
+    display: block
+
+    height: 70px
+    border-top: 1px solid #e2e2e2
+    border-bottom: 1px solid #7a7a7a
+
+    background: url(../images/tabbar-front.png) repeat-x
+
+    ul:first-child
+        +pie-clearfix
+        +box-sizing(border-box)
+        +linear-gradient(color-stops(#cfcfcf, #c2c2c2 50%, #b0b0b0))
+        border-bottom: 1px solid #8c8c8c
+        height: 34px
+        padding: 9px 40px 0
+
+        li
+            display: block
+            position: relative
+            background-image: url(../images/tab-left-inactive.png), url(../images/tab-middle.png), url(../images/tab-right-inactive.png)
+            background-repeat: no-repeat
+            background-size: 19px 26px, 112px 24px, 19px 26px
+            background-position: 0 0, 50% 0, 100% 0
+            float: left
+            height: 24px
+            width: 150px
+
+            &:not(:first-child)
+                margin-left: -17px
+
+            &:hover
+                background-image: url(../images/tab-left-hover.png), url(../images/tab-middle-hover.png), url(../images/tab-right-hover.png)
+
+            &.active
+                background-image: url(../images/tab-left-active.png), url(../images/tab-middle-active.png), url(../images/tab-right-active.png)
+                background-size: 19px 26px, 112px 60px, 19px 26px
+                z-index: 100
+                margin-bottom: -2px
+                height: 26px
+                
+                a
+                    text-shadow: 0 1px 0 #fff
+
+        a
+            color: #000
+            line-height: 26px
+            font-size: 11px
+            display: block
+            text-shadow: 0 1px 0 rgba(255, 255, 255, .8)
+            text-decoration: none
+            padding: 0 22px
+    
+    ul:nth-child(2)
+        margin: 4px 20px
+        text-shadow: 0 1px 0 #fff
+        
+        > li
+            padding: 5px 0
+            line-height: 19px
+            display: none
+        
+            &.frame-filter-bar
+                display: block

@@ -1,0 +1,155 @@
+
+.frame-filter-bar
+    
+    > div
+        display: block
+        float: left
+        
+        border-right: 1px solid rgba(255, 255, 255, .5)
+        border-left: 1px solid rgba(100, 100, 100, .4)
+        padding: 0 30px
+        
+        &:first-child
+            border-left: 0
+            padding-left: 0
+        
+        &:last-child
+            border-right: 0
+            padding-right: 0
+        
+
+    .flags-filter, .bindstatus-filter, .details-switch
+        padding-right: 22px
+        
+        ol
+            margin-top: -2px
+            margin-left: 6px
+            vertical-align: 1px
+        
+            li
+                text-shadow: 0 1px 0 rgba(255, 255, 255, .8)
+                line-height: 12px
+                color: #444
+                font-weight: bold
+                padding: 0
+                text-align: center
+            
+                &:hover
+                    +box-shadow(#eee, 0px, 1px, 0px)
+                    background: #888
+                    color: #fff
+                    text-shadow: 0 1px 0 #666
+                    font-weight: normal
+            
+                &.active
+                    +box-shadow(#eee, 0px, 1px, 0px)
+                    background: #666
+                    color: #fff
+                    text-shadow: 0 1px 0 #333
+                    font-weight: normal
+            
+                a
+                    padding: 3px 8px
+                    text-decoration: none
+                    color: inherit
+                    display: block
+    
+    .conversation-filter
+        
+        > strong
+            display: inline-block
+        
+        div
+            display: inline-block
+            position: relative
+            margin-top: -2px
+            height: 20px
+            
+            button
+                +linear-gradient(color-stops(#eee, #e6e6e6 20%, #d9d9d9 50%, #c9c9c9 50%, #eee))
+                +border-radius(5px)
+                display: block
+                border: 1px solid #aaa
+                padding: 5px 10px
+                line-height: 1em
+                margin: 0 10px
+                color: #333
+                position: relative
+                z-index: 101
+                
+                &:after
+                    content: " ▾"
+                
+                &:focus
+                    outline: none
+                
+                &:focus:not(:active)
+                    border-color: #6588a9
+                    +box-shadow(#6fa3d3, 0, 0, 4px)
+        
+            &:not(.open) button:hover
+                +linear-gradient(color-stops(#e3e3e3, #d9d9d9 20%, #d0d0d0 50%, #c0c0c0 50%, #e3e3e3))
+                border-color: #888
+                color: #000
+                +box-shadow(rgba(100, 100, 100, .3), 0, 0, 4px)
+                
+            button:active, &.open button
+                +linear-gradient(color-stops(#d6d6d6, #c9c9c9 20%, #ccc 50%, #b6b6b6 50%, #b9b9b9))
+                text-shadow: 0 -1px 0 rgba(100, 100, 100, .3)
+                border-color: #999
+        
+            &.open ol
+                display: block
+                
+            &.open button
+                +border-bottom-radius(0)
+                border-bottom: 0
+        
+            ol
+                +linear-gradient(color-stops(#b9b9b9, #eee 20%, #eee))
+                +border-bottom-radius(5px)
+                padding: 1px 0 5px
+                z-index: 100
+                display: none
+                position: absolute
+                left: 10px
+                margin-top: -1px
+                width: 170px
+                border: 1px solid #999
+                
+                li
+                    font-size: 11px
+                        position: relative
+                    
+                    input
+                        position: absolute
+                    
+                    input
+                        display: none
+
+                    input + label:before
+                        content: "✓"
+                        padding: 0 .48em 0 .3em
+                        text-align: center
+                        visibility: hidden
+
+                    input:checked + label:before
+                        visibility: visible
+                    
+                    &:hover
+                        background: rgba(100, 100,100, .2)
+                    
+                    label
+                        display: block
+                        padding: 2px 6px 2px 6px
+                        
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                

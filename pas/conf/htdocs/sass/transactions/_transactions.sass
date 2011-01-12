@@ -1,0 +1,195 @@
+@import flags
+@import details
+
+.transactions
+    border-collapse: collapse
+    width: 100%
+    +box-sizing(border-box)
+    
+    margin-top: 107px
+    
+    position: relative
+    background-image:   url(../images/port-pointer.png), url(../images/port-line.png)
+    background-position-y: 179px
+    background-position-x: (-4 * 26px + 42px)
+    background-attachment: fixed
+    background-repeat: no-repeat, repeat-y
+
+    thead
+        position: fixed
+        left: 0
+        top: 72px
+        
+        margin-right: 15px
+        
+        background: #fff url(../images/port-bottom.png) repeat-x bottom left
+        
+        tr
+            th:first-child
+                border-right: 1px solid #999
+                span
+                    display: block
+                    width: 55px
+            
+            td:last-child
+                width: 100%
+        
+        tr:first-child th:not(:first-child)
+            padding: 5px 10px
+            border: 1px solid #999
+            border-top: 0
+            background: #fff
+
+        th:not(:first-child)
+            text-align: center
+            border-right: 1px solid #999
+
+            &.port
+                height: 83px
+                vertical-align: bottom
+                padding-bottom: 20px
+                padding-right: 1px
+                font-family: "Espresso Mono"
+                color: #888
+                text-shadow: 0 1px 0 #fff
+                font-size: 11px
+
+                span
+                    width: 24px
+                    display: block
+                    text-align: left
+                    -webkit-transform: rotate(-90deg)
+
+                &.hover, &.active
+                    color: #555
+                    background: url(../images/port.png) no-repeat
+                    cursor: default
+
+    th, td
+        padding: 0
+
+    
+    > tbody
+        > tr.placeholder
+            > td
+                width: 25px
+                border-right: 1px solid #999
+                padding: 0
+                
+                &:last-child
+                    border-right: 0
+                
+                span
+                    margin: 0
+                    padding: 0
+                    height: 0
+                    width: 25px
+                    display: block
+    
+        > tr:not(.placeholder)
+            &:hover
+                > td, > th:first-child
+                    background: rgba(200, 200, 200, .3)
+
+            > td, > th
+                vertical-align: middle
+                border-top: 1px solid #ccc
+
+                &:not(.before):not(.after):not(:last-child)
+                    padding: 5px 12px 5px 13px
+            
+            > th
+                vertical-align: middle
+                border-right: 1px solid #999
+                padding-top: 8px !important
+                
+                span
+                    display: block
+                    width: 30px
+                    text-align: right
+
+            > td:last-child
+                border-left: 1px solid #999
+                cursor: default
+                width: 100%
+                color: #444
+                padding: 8px 7px
+                font-family: "Espresso Mono"
+
+    .transaction span
+        display: block
+        background-repeat: repeat-x, no-repeat
+        height: 5px
+        margin: 8px 0
+        
+    .rtl .transaction span
+        background-image: url(../images/flow-line.png), url(../images/flow-left.png)
+        
+    .ltr .transaction span
+        background-image: url(../images/flow-line.png), url(../images/flow-right.png)
+        background-position: center right
+        
+    
+    /* FILTERS */
+    
+    &.no-ack .ack-only,
+    &.push-only .syn2,
+    &.push-only .fin1,
+    .hidden,
+    .bindstatus-hidden
+        display: none !important
+    
+    .smart
+        &.bindstatus-request
+            .transaction span
+                +border-radius(10px)
+                +box-shadow(rgba(155, 187, 150, .9), 0px, 1px, 0px)
+                
+                background-color: #b4e5a4
+                background-image: url(../images/bindstatus-right.png), url(../images/bindstatus-left.png), url(../images/bindstatus-line.png)
+                background-repeat: no-repeat, no-repeat, repeat-x
+                background-position: 100% 50%, 0 50%, 0 50%
+                
+                margin: 3px 0 3px 0
+                height: 15px
+                text-align: center
+                
+                &:after
+                    content: "BindStatus"
+                    display: inline-block
+                    padding: 0 4px
+                    line-height: 15px
+                    background: #b4e5a4
+                    color: #396b33
+                    font-size: 9px
+                    text-shadow: 0 1px 0 #fff
+        
+        &.syn1,
+        &.fin2,
+        &.bindstatus-response
+            display: none
+        
+        &.syn2, &.fin1
+            .transaction span
+                opacity: 1
+                margin: 6px 0 5px 0
+                height: 10px
+                background: 0
+                background-repeat: no-repeat, no-repeat, repeat-x
+                background-position: 0 0, 100% 0, 0 0
+        
+        // rtl and ltr inversed to retain the direction of the first syn (but we are operating on the second)
+        
+        &.syn2.rtl .transaction span
+            background-image: url(../images/syn-start.png), url(../images/syn-end.png), url(../images/syn-ltr.png)
+
+        &.syn2.ltr .transaction span
+            background-image: url(../images/syn-start.png), url(../images/syn-end.png), url(../images/syn-rtl.png)
+
+        &.fin1.rtl .transaction span
+            background-image: url(../images/fin-start.png), url(../images/fin-end.png), url(../images/fin-rtl.png)
+
+        &.fin1.ltr .transaction span
+            background-image: url(../images/fin-start.png), url(../images/fin-end.png), url(../images/fin-ltr.png)
+
+

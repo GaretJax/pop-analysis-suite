@@ -1,0 +1,93 @@
+
+.transactions > tbody > tr > td:last-child
+    code
+        padding-left: 10px
+        color: #888
+    
+    .details
+        display: none
+    
+    .codehilite, .payload
+        cursor: auto
+        -webkit-user-select: text
+        background: #f3f3f3
+        border-top: 1px solid #ddd
+        border-bottom: 1px solid #ddd
+        margin: 8px -7px 0
+        padding: 8px 7px 8px 10px
+        line-height: 1.3em
+        
+        &:before
+            -webkit-user-select: none
+            float: right
+            line-height: 19px
+            color: #aaa
+            font-size: 9px
+            letter-spacing: 1px
+            text-shadow: 0 1px 0 #fff
+            text-transform: uppercase
+            content: "Decoded frame"
+    
+    .payload
+        color: #555
+        line-height: 1.5em
+        
+        span
+            padding-bottom: 10px
+            display: block
+            
+            &:last-child
+                display: inline
+        
+        &:before
+            content: "Original payload"
+    
+    .actors
+        margin-top: 8px
+    
+        span
+            color: #777
+            text-transform: uppercase
+            font-size: .8em
+            
+            &:nth-child(3):before
+                font-family: "Lucida Grande"
+                font-size: 1.2em
+                color: #ccc
+                content: "\2003→\2003 \2003"
+        
+        strong
+            cursor: auto
+            -webkit-user-select: text
+            padding: 0 10px 0 5px
+
+.transactions > tbody > tr.details
+    th, td
+        background: 0 !important
+    
+    & + tr th, & + tr td, th, td
+        border-top-color: #aaa !important
+
+.transactions > tbody > tr.details > td:last-child
+    background: 0 !important
+    
+    .details
+        display: block
+
+.transactions > tbody > tr:hover > td:last-child
+    code
+        color: #444
+        
+        &:after
+            content: " \2003 — \2003 Show details"
+            text-shadow: 0 1px 0 #fff
+            color: #888
+            font-size: .8em
+            font-family: "Lucida Grande"
+
+.transactions > tbody > tr.details:hover > td:last-child
+    code:after
+        content: " \2003 — \2003 Hide details"
+        
+    
+    

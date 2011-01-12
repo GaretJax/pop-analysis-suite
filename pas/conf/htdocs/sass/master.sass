@@ -1,0 +1,51 @@
+@import compass/utilities
+@import compass/css3
+
++global-reset
++reset-html5
+
+hgroup
+    display: block
+
+html, body
+    height: 100%
+    max-height: 100%
+    overflow: hidden
+
+body
+    font-family: "Lucida Grande"
+    font-size: 12px
+    -webkit-user-select: none
+    cursor: default
+
+body > header
+    font-family: "Lucida grande"
+    font-size: 15px
+    padding: 0 10px
+    line-height: 25px
+    color: rgba(10, 10, 10, .7)
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .7)
+    
+    position: absolute
+    right: 0
+    top: 0
+    z-index: 200
+    
+    sup
+        vertical-align: super
+        font-size: .7em
+
+body > section
+    +box-sizing(border-box)
+    display: none
+    overflow: auto
+    
+    &:target
+        display: block
+
+@import navigation
+@import _highlight
+@import transactions/transactions
+
+
+
