@@ -69,7 +69,7 @@ def select(name=None, basedir=None):
     # There is not much to choose here
     if len(paths) == 1:
         # @TODO: log
-        print "\nOnly one measure found: {} ({} at {}).".format(*paths[0][1])
+        print "\nOnly one measure found: {0} ({1} at {2}).".format(*paths[0][1])
         path = paths[0]
         return path[0], '_'.join(path[1])
 
@@ -79,7 +79,7 @@ def select(name=None, basedir=None):
 
     for i, (path, name) in enumerate(paths):
         index = '[{}]'.format(i)
-        print '{:>8s}: {} ({} at {})'.format(index, *name)
+        print '{0:>8s}: {1} ({2} at {3})'.format(index, *name)
 
     def valid(index):
         """
@@ -91,7 +91,7 @@ def select(name=None, basedir=None):
             return path[0], '_'.join(path[1])
         except (IndexError, ValueError):
             raise Exception("Enter an integer between 0 " \
-                            "and {}.".format(len(paths)-1))
+                            "and {0}.".format(len(paths)-1))
 
     print
     return shell.prompt("Select a measure:", validate=valid)
@@ -112,8 +112,8 @@ def start(name):
             shell.remote('rm -rf {0} ; mkdir {0}'.format(dest), sudo=True)
 
             for i in interfaces:
-                mname = '{}.{}'.format(name, i)
-                tshark.start(mname, i, '{}/{}.raw'.format(dest, mname), fltr)
+                mname = '{0}.{1}'.format(name, i)
+                tshark.start(mname, i, '{0}/{1}.raw'.format(dest, mname), fltr)
 
 
 def stop(name):
@@ -143,7 +143,7 @@ def collect(name, overwrite=False):
     """
 
     ip = '$(getip eth1)'
-    name = "{}_{}".format(name, datetime.now().strftime('%Y-%m-%d_%H:%M'))
+    name = "{0}_{1}".format(name, datetime.now().strftime('%Y-%m-%d_%H:%M'))
 
     guest_local = settings.paths['local-measures'][1]
     host_shared, guest_shared = settings.paths['shared-measures']
@@ -152,11 +152,11 @@ def collect(name, overwrite=False):
 
     try:
         if os.listdir(local):
-            print "A directory with the same name ({}) already " \
+            print "A directory with the same name ({0}) already " \
                   "exists.".format(name)
 
             if overwrite or shell.confirm("Would you like to replace it?"):
-                shell.local('rm -rf {}/*'.format(local))
+                shell.local('rm -rf {0}/*'.format(local))
             else:
                 raise OSError(errno.ENOTEMPTY, "Directory not empty")
     except OSError as e:
@@ -166,8 +166,8 @@ def collect(name, overwrite=False):
 
     shell.remote('chown -R {0}:{0} {1}'.format(settings.vm_user, guest_local),
                  sudo=True)
-    shell.remote('mkdir -p "{}"'.format(destination))
-    shell.remote('cp {}/* "{}"'.format(guest_local, destination))
+    shell.remote('mkdir -p "{0}"'.format(destination))
+    shell.remote('cp {0}/* "{1}"'.format(guest_local, destination))
 
 
 def toxml(name):
@@ -322,7 +322,7 @@ def report(name):
     destination = os.path.join(host_shared, name, 'report')
 
     shutil.rmtree(destination, True)
-    shell.local("mkdir -p {}".format(destination))
+    shell.local("mkdir -p {0}".format(destination))
 
     pattern = os.path.join(host_shared, name, "*", "simple.lo.decoded.xml")
 

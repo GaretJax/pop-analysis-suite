@@ -53,7 +53,7 @@ def select(name=None, basedir=None):
     # There is not much to choose here
     if len(paths) == 1:
         # @TODO: log
-        print "\nOnly one test case found: {}.".format(paths[0][1])
+        print "\nOnly one test case found: {0}.".format(paths[0][1])
         return paths[0]
 
     # Present a list of choices to the user (paths must now contain more than
@@ -61,8 +61,8 @@ def select(name=None, basedir=None):
     print "\nMultiple test cases found:\n"
 
     for i, (path, name) in enumerate(paths):
-        index = '[{}]'.format(i)
-        print '{:>8s}: {}'.format(index, name)
+        index = '[{0}]'.format(i)
+        print '{0:>8s}: {1}'.format(index, name)
 
     def valid(index):
         """
@@ -73,7 +73,7 @@ def select(name=None, basedir=None):
             return paths[int(index)]
         except (IndexError, ValueError):
             raise Exception("Enter an integer between 0 " \
-                            "and {}.".format(len(paths)-1))
+                            "and {0}.".format(len(paths)-1))
 
     print
     return shell.prompt("Select a test case:", validate=valid)
@@ -104,7 +104,7 @@ def compile(name, localdir=None, remotedir=None):
     remote = os.path.join(remotedir, name)
 
     with shell.ignore_warnings():
-        shell.local('rm {}/build/obj.map'.format(local))
+        shell.local('rm {0}/build/obj.map'.format(local))
 
     with shell.workon(all_hosts()):
         with shell.cd(remote):

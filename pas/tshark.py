@@ -50,7 +50,7 @@ def stop(name, interface):
     The final name passed to the screen command will be the name joined with
     the interface by a dot.
     """
-    shell.remote('screen -X -S {}.{} quit'.format(name, interface), sudo=True)
+    shell.remote('screen -X -S {0}.{1} quit'.format(name, interface), sudo=True)
 
 
 def kill():

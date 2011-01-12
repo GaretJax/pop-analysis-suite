@@ -237,7 +237,7 @@ def build_parser():
         # ...whose name don't start with an underscore...
         if cmd.endswith('.py') and not cmd.startswith('_'):
             name = cmd.rsplit('.', 1)[0]
-            fullname = '{}.{}'.format(__name__, name)
+            fullname = '{0}.{1}'.format(__name__, name)
             
             # ...import the command and getparser function...
             module = __import__(fullname, globals(), locals(),

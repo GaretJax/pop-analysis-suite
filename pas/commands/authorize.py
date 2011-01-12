@@ -27,17 +27,17 @@ def command(_=None):
     remote = os.path.join(remote, 'authorized_keys')
 
     with shell.ignore_warnings():
-        shell.local('rm {}'.format(local))
+        shell.local('rm {0}'.format(local))
 
     # Collect all keys in one file
-    shell.remote('cat $HOME/.ssh/id_rsa.pub >>{}'.format(remote))
+    shell.remote('cat $HOME/.ssh/id_rsa.pub >>{0}'.format(remote))
 
     # Copy first authorized key (host machine) to temp location
     shell.remote('head -1 $HOME/.ssh/authorized_keys ' \
                  '>$HOME/.ssh/authorized_keys.tmp')
 
     # Append all other keys
-    shell.remote('cat {} >>$HOME/.ssh/authorized_keys.tmp'.format(remote))
+    shell.remote('cat {0} >>$HOME/.ssh/authorized_keys.tmp'.format(remote))
 
     # Move to the original location
     shell.remote('mv $HOME/.ssh/authorized_keys.tmp ' \
@@ -49,5 +49,5 @@ def command(_=None):
                  'grep -E \'[0-9.]{7,15}\' | ' \
                  'ssh-keyscan -f - -H -t rsa >$HOME/.ssh/known_hosts')
 
-    shell.local('rm {}'.format(local))
+    shell.local('rm {0}'.format(local))
 

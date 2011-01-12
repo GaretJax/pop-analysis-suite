@@ -76,7 +76,7 @@ def remote(cmd, pty=False, user=None, sudo=False):
     call is made, otherwise a simple fabric.operations.run.
     """
     if state.env.cwd:
-        cmd = 'cd {} && {}'.format(state.env.cwd, cmd)
+        cmd = 'cd {0} && {1}'.format(state.env.cwd, cmd)
     
     with _context(user=settings.vm_user, password=settings.vm_password):
         for host in state.env.hosts or all_hosts():

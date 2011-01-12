@@ -44,7 +44,7 @@ class Settings(object):
         Older keys are overridden by new ones.
         """
         log = logging.getLogger()
-        log.debug("Loading settings from '{}'".format(module.__file__))
+        log.debug("Loading settings from '{0}'".format(module.__file__))
         
         for key, value in module.__dict__.iteritems():
             if not key.startswith('_'):
@@ -67,7 +67,7 @@ class Settings(object):
             log.critical("Could not load settings, module not found on path:")
             
             for i in sys.path:
-                log.debug(" - checked: {}".format(i))
+                log.debug(" - checked: {0}".format(i))
             
             raise
         else:
@@ -91,7 +91,7 @@ class Settings(object):
         directives = []
         
         for key, value in self.__dict__.iteritems():
-            directives.append('{}={}'.format(key, value))
+            directives.append('{0}={1}'.format(key, value))
         
         return '\n'.join(directives)
     
@@ -99,7 +99,7 @@ class Settings(object):
         """
         Raises a custom exception if the attribute was not found.
         """
-        raise AttributeError("The requested setting directive ({}) is " \
+        raise AttributeError("The requested setting directive ({0}) is " \
                              "not set".format(name))
 
 

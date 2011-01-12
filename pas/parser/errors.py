@@ -18,4 +18,4 @@ class UnknownMethod(ValueError):
         self.methodid = methodid
 
     def __str__(self):
-        return "Unknown method for class {!s}: {}".format(self.klass, self.methodid)
+        return "Unknown method for class {0!s}: {1}".format(self.klass, self.methodid)
