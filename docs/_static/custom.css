@@ -1,0 +1,64 @@
+
+
+
+@import url("nature.css");
+
+body {
+    background: #333;
+}
+
+div.footer {
+    color: #777;
+}
+div.footer a {
+    color: #555;
+}
+
+pre {
+    -webkit-box-shadow: none;
+    background: #f3f3f3;
+    border-right: 0;
+    border-left: 0;
+    line-height: 1.5em;
+    padding: 7px 13px 9px 13px;
+}
+
+div.related:first-child {
+    border-bottom: 1px solid #368321;
+}
+
+.document + div.related {
+    border-top: 1px solid #368321;
+    padding-bottom: 1px;
+    border-bottom: 1px solid #222;
+}
+
+div.sphinxsidebar input[type="text"] {
+    padding: 2px 3px 3px;
+}
+
+.body blockquote ul {
+    padding-left: 0px;
+}
+.body blockquote ul li {
+    padding: 1px 0;
+}
+
+div.bodywrapper {
+    margin-left: 280px;
+}
+
+div.sphinxsidebar {
+    width: 280px;
+    font-size: .9em;
+    line-height: 1.5em;
+}
+div.sphinxsidebar p {
+    margin: .4em 0;
+}
+
+
+.section p,
+.section blockquote {
+    max-width: 800px;
+}
