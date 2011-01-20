@@ -9,7 +9,17 @@ body {
 
 div.footer {
     color: #777;
+    float: left;
+    text-align: left;
+    padding-left: .9em;
+    width: auto;
+    line-height: 2.1em;
 }
+
+.badge.revsys-inline {
+    padding-top: 4px;
+}
+
 div.footer a {
     color: #555;
 }
