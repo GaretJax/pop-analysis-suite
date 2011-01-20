@@ -1,4 +1,4 @@
-Quick-start
+Quick start
 ===========
 
 The steps contained in this short guide should get you up and running in as few
