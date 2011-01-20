@@ -13,9 +13,21 @@ div.footer {
     line-height: 2.1em;
 }
 
+.badge {
+    opacity: .8;
+    -webkit-transition: opacity .8s linear;
+}
+.badge:hover {
+    opacity: 1;
+    -webkit-transition: opacity .8s linear;
+}
+
 .badge.revsys-inline {
     margin-top: 4px;
     margin-right: 172px !important;
+    margin-bottom: 0 !important;
+    right: 0 !important;
+    position: fixed !important;
 }
 
 div.footer a {
