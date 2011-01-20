@@ -62,3 +62,7 @@ div.sphinxsidebar p {
 .section blockquote {
     max-width: 800px;
 }
+
+div.footer + hr {
+    display: none;
+}

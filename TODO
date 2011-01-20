@@ -1,0 +1,11 @@
+README
+Refactoring (pylint + pyflakes)
+Tests
+Documentation
+    * creating measure cases
+    * running measures
+    * commands
+    * settings
+    * api
+    * running without vagrant
+    * advanced topics
