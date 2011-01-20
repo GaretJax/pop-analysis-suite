@@ -1,6 +1,3 @@
-
-
-
 @import url("nature.css");
 
 body {
@@ -18,6 +15,7 @@ div.footer {
 
 .badge.revsys-inline {
     margin-top: 4px;
+    margin-right: 172px !important;
 }
 
 div.footer a {
