@@ -67,18 +67,40 @@ Until a stable release is packaged and uploaded to the cheese shop, the latest
 development snapshot can be installed directly from the github hosted sources
 using ``easy_install`` or ``pip``::
 
-   pip install https://github.com/GaretJax/pop-analysis-suite/tarball/master
+   $ pip install https://github.com/GaretJax/pop-analysis-suite/tarball/master
 
 To check if the package was correctly installed, run the the ``pas`` command on
 the command line::
 
-   pas
+   $ pas
 
 You should obtain an incorrect usage error similar to the following::
 
    usage: pas [-h] [--version] [-v] [-q] [--settings SETTINGS_MODULE]
               {authorize,execute,jobmgr,compile,init,measure} ...
    pas: error: too few arguments
+
+
+Install from source
+~~~~~~~~~~~~~~~~~~~
+
+It is possible to install the PAs package directly from source. The following
+commands should get you started::
+
+   $ wget --no-check-certificate https://github.com/GaretJax/pop-analysis-suite/tarball/master
+   $ tar -xzf GaretJax-pop-analysis-suite-*.tar.gz
+   $ cd GaretJax-pop-analysis-suite-*
+   $ python setup.py install
+
+
+Setuptools
+~~~~~~~~~~
+
+To install the PAS package, the setuptools package is required (for both source
+or remote installation modes). You can obtain further information about
+setuptools either on its
+`pypi project page <http://pypi.python.org/pypi/setuptools>`_ or on
+`the official homepage <http://peak.telecommunity.com/DevCenter/setuptools>`_.
 
 
 Development
@@ -108,10 +130,10 @@ It can either be `read online <http://readthedocs.org/docs/pas/>`_ thanks to
 To create a local build, make sure to have the ``sphinx`` package installed and
 run the following commands::
 
-   git clone https://github.com/GaretJax/pop-analysis-suite/
-   cd pop-analysis-suite/docs
-   make html  # or any other format; run make without arguments to find out
-              # the supported ones
+   $ git clone https://github.com/GaretJax/pop-analysis-suite/
+   $ cd pop-analysis-suite/docs
+   $ make html  # or any other format; run make without arguments to find out
+                # the supported ones
 
 The documentation builds will then be placed in the ``_build/<format>``
 subdirectory.

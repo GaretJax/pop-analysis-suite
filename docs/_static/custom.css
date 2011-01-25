@@ -14,12 +14,12 @@ div.footer {
 }
 
 .badge {
-    opacity: .8;
-    -webkit-transition: opacity .8s linear;
+    opacity: .6;
+    -webkit-transition: opacity .4s linear;
 }
 .badge:hover {
     opacity: 1;
-    -webkit-transition: opacity .8s linear;
+    -webkit-transition: opacity .4s linear;
 }
 
 .badge.revsys-inline {
@@ -79,10 +79,46 @@ div.sphinxsidebar p {
 
 
 .section p,
-.section blockquote {
+.section blockquote,
+.section div.admonition p.admonition-title + p {
     max-width: 800px;
 }
-
+.section div.admonition p.admonition-title + p {
+    display: inline-block;
+    margin: 0;
+}
+.section div.admonition p.admonition-title,
+p.admonition-title::after {
+    vertical-align: top;
+}
 div.footer + hr {
     display: none;
 }
+
+
+/* +Notes */
+div.note {
+    background-color: #EAF4FF;
+    border-color: #a4c3ed;
+    border-right: 0;
+    border-left: 0;
+}
+div.note .admonition-title {
+    color: #14567F;
+}
+div.admonition p.admonition-title + p {
+    
+}
+/* -Notes */
+
+
+
+
+
+
+
+
+
+
+
+

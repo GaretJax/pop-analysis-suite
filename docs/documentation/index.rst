@@ -6,3 +6,5 @@ Documentation
    
    quick-start
    execution-model
+   commands
+   measure-cases
