@@ -1,16 +1,28 @@
+
+import os
 from setuptools import setup, find_packages
  
 version = '0.1'
- 
-setup(name='pas',
+
+def read(fname):
+    """
+    Utility function to read the README file.
+    """
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+
+setup(
+    name='pas',
     version=version,
     description="POP Analysis Suite",
-    long_description="""A protocol and communication analyzer for the POP (Parallel Object Programming) model.""",
-    classifiers=[],
+    long_description=read('README.md'),
+    classifiers=[
+        'Development Status :: 4 - Beta',
+    ],
     keywords='',
     author='Jonathan Stoppani',
     author_email='jonathan.stoppani@edu.hefr.ch',
-    url='',
+    url='https://github.com/GaretJax/pop-analysis-suite',
     license='MIT',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
@@ -19,8 +31,5 @@ setup(name='pas',
         'lxml',
         'pygments',
     ],
-    entry_points="""
-[console_scripts]
-pas = pas.bin.pas:main
-"""
+    entry_points=read('entry_points.ini')
 )
