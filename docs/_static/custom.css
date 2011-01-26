@@ -57,10 +57,12 @@ div.sphinxsidebar input[type="text"] {
     padding: 2px 3px 3px;
 }
 
-.body blockquote ul {
+.body blockquote ul,
+.body blockquote ol {
     padding-left: 0px;
 }
-.body blockquote ul li {
+.body blockquote ul li,
+.body blockquote ol li {
     padding: 1px 0;
 }
 
@@ -77,11 +79,27 @@ div.sphinxsidebar p {
     margin: .4em 0;
 }
 
+.section dl.docutils {
+    margin-left: 40px;
+}
+
+.section dl.docutils dt {
+    font-weight: bold;
+    display: list-item;
+}
+
+.section dl.docutils dd {
+    margin-left: 0;
+}
 
 .section p,
 .section blockquote,
-.section div.admonition p.admonition-title + p {
+.section div.admonition p.admonition-title + p,
+.section dl {
     max-width: 800px;
+}
+.section dd {
+    max-width: 770px;
 }
 .section div.admonition p.admonition-title + p {
     display: inline-block;
@@ -99,19 +117,39 @@ div.footer + hr {
 /* +Notes */
 div.note {
     background-color: #EAF4FF;
-    border-color: #a4c3ed;
+    border: 1px solid #a4c3ed;
     border-right: 0;
     border-left: 0;
 }
 div.note .admonition-title {
     color: #14567F;
 }
-div.admonition p.admonition-title + p {
-    
-}
 /* -Notes */
 
+/* +Todos */
+div.admonition-todo {
+    background-color: #EAF4FF;
+    border: 1px solid #a4c3ed;
+    border-right: 0;
+    border-left: 0;
+}
+div.admonition-todo .admonition-title {
+    color: #14567F;
+}
+/* -Todos */
 
+/* API */
+
+.section dl + dl:before {
+    border-top: 1px solid #eee;
+    display: block;
+    content: " ";
+    padding-bottom: .8em;
+}
+.section dl + dl {
+    margin-top: 0;
+    border-top: 1px solid #aaa;
+}
 
 
 
