@@ -29,7 +29,7 @@ def getparser(parser):
 
 @commands.nosettings
 def command(options):
-    log = logging.getLogger('CommandLogger')
+    log = logging.getLogger('pas.commands')
     dest = os.path.realpath(options.dir)
     
     log.info("Attempting to create a new environment in '%s'...", dest)
