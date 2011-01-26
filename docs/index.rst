@@ -13,6 +13,18 @@ Contents:
    
    introduction
    documentation/index
+   todo
+
+
+.. todo::
+   Add documents describing the following tasks to the documentation:
+   
+   * Extending the parser
+   * Adding custom commands
+   * Build the documentation
+   * Configuring more virtual machines
+   * Settings reference + overwriting
+
 
 Indices and tables
 ==================
