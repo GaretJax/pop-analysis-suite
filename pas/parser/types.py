@@ -2,7 +2,6 @@ import __builtin__
 from pas.parser import registry, errors
 import xdrlib
 from collections import namedtuple
-from functools import partial, wraps
 from lxml import etree
 
 
@@ -11,7 +10,7 @@ class cls(object):
     def __init__(self, id, name, methods):
         self.id = id
         self.name = name
-        self.methods = {m.id: m for m in methods}
+        self.methods = dict([(m.id, m) for m in methods])
         registry.current_registry.register_class(self)
 
     def __str__(self):
@@ -63,7 +62,7 @@ def compound(name, *parts):
     model = namedtuple(name, ' '.join(p[0] for p in parts))
 
     def decoder(stream):
-        return model(**{name: type(stream) for name, type in parts})
+        return model(**dict([(name, type(stream)) for name, type in parts]))
 
     return decoder
 
@@ -98,7 +97,7 @@ def float(stream):
 
 def dict(key, value):
     def decoder(stream):
-        return {key(stream): value(stream) for i in range(int(stream))}
+        return dict([(key(stream), value(stream)) for i in range(int(stream))])
     return decoder
 
 

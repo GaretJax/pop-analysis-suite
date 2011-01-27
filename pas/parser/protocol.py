@@ -3,9 +3,8 @@
 """
 
 
-import struct
 import xdrlib
-from pas.parser import messages, errors
+from pas.parser import messages
 
 
 class MappingProtocol(object):
@@ -60,7 +59,7 @@ class MappingProtocol(object):
         return messages.POPResponse(cls, mth, result, decoder.get_buffer())
 
     def handle_exception(self, classid, _1, _2, decoder):
-        exc = self.types_registry.get_exception(code)
+        exc = self.types_registry.get_exception(classid)
 
         properties = exc.properties(decoder)
 
