@@ -30,6 +30,7 @@ setup(
         'fabric',
         'lxml',
         'pygments',
+        'argparse',
     ],
     entry_points=read('entry_points.ini')
 )
