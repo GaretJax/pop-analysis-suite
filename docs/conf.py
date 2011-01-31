@@ -11,16 +11,31 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import sys, os, collections
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-# Add dummy packages to allow the documentation build to pass on systems
+# Add dummy packages to allow the documentation builds to pass on systems
 # not providing all requirements.
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '_dummy'))
+
+class dummy(object):
+    def __init__(self, *dummy):
+        self.dummy = set(dummy)
+        sys.meta_path.append(self)
+
+    def find_module(self, module_name, package_path):
+        return self if not package_path and module_name in self.dummy else None
+    
+    def __getattr__(self, _):
+        return self
+    
+    def load_module(self, _):
+        return self
+
+dummy('argparse', 'lxml')
 
 # -- General configuration -----------------------------------------------------
 
