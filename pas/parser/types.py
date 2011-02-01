@@ -4,7 +4,7 @@ import xdrlib
 from collections import namedtuple
 from lxml import etree
 
-
+# pylint: disable-msg=C0103,C0111
 
 class cls(object):
     def __init__(self, id, name, methods):

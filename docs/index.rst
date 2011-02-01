@@ -6,13 +6,14 @@
 PAS - POP Analysis Suite 0.1a
 =============================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
    
    introduction
    documentation/index
+   advanced/index
+   references/index
+   glossary
    todo
 
 
@@ -20,8 +21,8 @@ Contents:
    Add documents describing the following tasks to the documentation:
    
    * Extending the parser
-   * Adding custom commands
    * Build the documentation
+   * Roles
    * Configuring more virtual machines
    * Settings reference + overwriting
 

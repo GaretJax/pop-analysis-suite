@@ -50,7 +50,7 @@ def select(name=None, basedir=None):
     paths = [(os.path.join(basedir, p), p.rsplit('_', 2)) for p in paths]
 
     # Filter out non-directories
-    paths = filter(lambda p: os.path.isdir(p[0]), paths)
+    paths = [p for p in paths if os.path.isdir(p[0])]
 
     # If no entries remained, there are no test cases which can be run
     if not paths:
@@ -142,12 +142,12 @@ def collect(name, overwrite=False):
     destination directory if needed.
     """
 
-    ip = '$(getip eth1)'
+    ipaddr = '$(getip eth1)'
     name = "{0}_{1}".format(name, datetime.now().strftime('%Y-%m-%d_%H:%M'))
 
     guest_local = settings.paths['local-measures'][1]
     host_shared, guest_shared = settings.paths['shared-measures']
-    destination = os.path.join(guest_shared, name, ip)
+    destination = os.path.join(guest_shared, name, ipaddr)
     local = os.path.realpath(os.path.join(host_shared, name))
 
     try:
@@ -188,30 +188,30 @@ def toxml(name):
             tshark.pcaptoxml(path, path.replace('.raw', '.xml'))
 
 
-def simplify(name, format=True):
+def simplify(name, prettyprint=True):
     """
     Simplifies all the measure files in pdxml format of the given measure,
     converting them using the simplify XSL stylesheet. Old simplifications
     will be overwritten.
 
-    If the format optional argument is True, the result will be formatted
+    If the prettyprint optional argument is True, the result will be formatted
     using the xmllint tool.
     """
     host_shared = settings.paths['shared-measures'][0]
     pattern = os.path.join(host_shared, name, "*", "*.xml")
 
-    tr = xml.Transformation(stylesheet('simplify.xsl'))
+    simplifier = xml.Transformation(stylesheet('simplify.xsl'))
 
     for source in glob.glob(pattern):
         if not source.endswith('.simple.xml'):
             dest = source.replace('.xml', '.simple.xml')
-            tr.transform(source, dest)
+            simplifier.transform(source, dest)
 
-            if format:
-                xml.format(dest)
+            if prettyprint:
+                xml.prettyprint(dest)
 
 
-def decode(name, format=False):
+def decode(name, prettyprint=False):
     """
     Decodes the simplified XML representation of the given measure by adding
     a "decoded" element to each packet containing a payload.
@@ -228,6 +228,10 @@ def decode(name, format=False):
     trans = xml.Transformation(stylesheet('decode.xsl'))
 
     def _decode(context, payload):
+        """
+        Decoding callback
+        """
+        
         # Convert the ascii representation back to binary data
         bin_payload = binascii.a2b_hex(''.join(payload))
 
@@ -251,7 +255,8 @@ def decode(name, format=False):
             return
         except errors.UnknownClass as e:
             print "-" * 80
-            print context.context_node.attrib['timestamp'], "Error while decoding packet:", e
+            print context.context_node.attrib['timestamp'],
+            print "Error while decoding packet:", e
             print binascii.b2a_hex(stream.get_buffer())
             print "-" * 80
             return
@@ -260,11 +265,11 @@ def decode(name, format=False):
             print context.context_node.attrib['timestamp'], e
             print repr(e.message)
 
-            r = stream.get_buffer()
+            rest = stream.get_buffer()
             rem = stream.get_position()
-            print binascii.b2a_hex(r[rem:])
+            print binascii.b2a_hex(rest[rem:])
             print
-            print repr(r[rem:])
+            print repr(rest[rem:])
             print
             print str(rem) + "/" + str(_)
             print "*" * 80
@@ -273,7 +278,8 @@ def decode(name, format=False):
         # Convert the message to xml and send it back to the XSL template
         return message.toxml()
 
-    trans.registerFunction('http://gridgroup.eia-fr.ch/popc', _decode, 'decode')
+    trans.register_function('http://gridgroup.eia-fr.ch/popc',
+                            _decode, 'decode')
 
     # Apply transformation to all simplified xml files
     host_shared = settings.paths['shared-measures'][0]
@@ -283,8 +289,8 @@ def decode(name, format=False):
         dest = source.replace('.simple.xml', '.decoded.xml')
         trans.transform(source, dest)
 
-        if format:
-            xml.format(dest)
+        if prettyprint:
+            xml.prettyprint(dest)
 
 
 def report(name):
@@ -296,27 +302,30 @@ def report(name):
     
     trans = xml.Transformation(stylesheet('report.xsl'))
     
-    def format_stream(context, payload):
+    def format_stream(_, payload):
+        """
+        Stream formatting xslt callback
+        """
         payload = ''.join(payload)
         
-        def chunks(l, n):
+        def chunks(seq, n):
             """ Yield successive n-sized chunks from l.
             """
-            for i in xrange(0, len(l), n):
-                yield l[i:i+n]
+            for i in xrange(0, len(seq), n):
+                yield seq[i:i+n]
         
-        el = etree.Element('pre')
+        element = etree.Element('pre')
         
         payload = ' '.join(chunks(payload, 2))
         payload = ' '.join(chunks(payload, 12))
         payload = '\n'.join(chunks(payload, 104))
         
-        for b in chunks(payload, 420):
-            etree.SubElement(el, 'span').text = b
+        for chunk in chunks(payload, 420):
+            etree.SubElement(element, 'span').text = chunk
         
-        return el
+        return element
     
-    trans.registerFunction('http://gridgroup.eia-fr.ch/popc', format_stream)
+    trans.register_function('http://gridgroup.eia-fr.ch/popc', format_stream)
     
     host_shared = settings.paths['shared-measures'][0]
     destination = os.path.join(host_shared, name, 'report')
@@ -331,7 +340,8 @@ def report(name):
         trans.transform(source, dest)
         
         # Tidy
-        shell.local('tidy -config conf/tidy/tidy.conf -o {0} {0} || true'.format(dest))
+        tconf = "conf/tidy/tidy.conf"
+        shell.local('tidy -config {1} -o {0} {0} || true'.format(dest, tconf))
         
         # break after the first one
         # @TODO: Assemble all resources
@@ -340,9 +350,18 @@ def report(name):
     # Copy resources
     htdocs = os.path.join(os.path.dirname(conf.__file__), 'htdocs')
     
-    shutil.copytree(os.path.join(htdocs, 'styles'), os.path.join(destination, 'styles'))
-    shutil.copytree(os.path.join(htdocs, 'images'), os.path.join(destination, 'images'))
-    shutil.copytree(os.path.join(htdocs, 'scripts'), os.path.join(destination, 'scripts'))
+    shutil.copytree(
+        os.path.join(htdocs, 'styles'),
+        os.path.join(destination, 'styles')
+    )
+    shutil.copytree(
+        os.path.join(htdocs, 'images'),
+        os.path.join(destination, 'images')
+    )
+    shutil.copytree(
+        os.path.join(htdocs, 'scripts'),
+        os.path.join(destination, 'scripts')
+    )
 
 
 

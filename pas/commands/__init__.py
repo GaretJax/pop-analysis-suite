@@ -39,14 +39,29 @@ from pas import measure
 
 def nosettings(func):
     """
-    Normally the command invoker will try to load the settings and terminate
-    the execution if no settings can be loaded, but some commands don't need
+    Instructs the command dispatcher to not try to load the settings when
+    executing this command.
+
+    Normally the command invoker will try to load the settings and will
+    terminate the execution if not able to do so, but some commands don't need
     the settings module and are specifically crafted to operate outside of an
-    active suite.
+    active testing environment.
 
     To instruct the invoker not to try to load the settings, a nosettings
-    attribute with a non-fale value can be set on the command function; this
+    attribute with a non-false value can be set on the command function; this
     decorator does exactly this.
+
+    You can use it like this::
+
+        from pas.commands import nosettings
+
+        @nosettings
+        def command(options):
+            # Do something without the settings
+            pass
+
+    :param func: The command function for which the settings don't have to be
+                 loaded.
     """
     func.nosettings = True
     return func
@@ -54,9 +69,27 @@ def nosettings(func):
 
 def select_case(func):
     """
-    Wraps the given command and provides it with a valid test case, by asking
-    the user to correct his input if necessary or by directly coercing to a
-    valid value if possible.
+    Adds a ``case`` attribute to the ``Namespace`` instance passed to the
+    command, containing a tuple of ``(full-path-on-disk-to-the-measure-case,
+    measure-case-basename)``.
+
+    The ``case`` attribute is populated by calling the
+    :py:func:`pas.case.select` function.
+
+    If a ``case`` attribute is already set on the ``Namespace`` its value will
+    be passed to the the :py:func:`pas.case.select` function as default value
+    for the selection.
+
+    You can use it like this::
+
+        from pas.commands import select_case
+
+        @select_case
+        def command(options):
+            # Do something with the measure case
+            print options.case
+
+    :param func: The command function for which the a case has to be selected.
     """
     @functools.wraps(func)
     def check_and_ask(options):
@@ -72,9 +105,27 @@ def select_case(func):
 
 def select_measure(func):
     """
-    Wraps the given command and provides it with a valid measure, by asking
-    the user to correct his input if necessary or by directly coercing to a
-    valid value if possible.
+    Adds a ``measure`` attribute to the ``Namespace`` instance passed to the
+    command, containing a tuple of ``(full-path-on-disk-to-the-measure,
+    measure-basename)``.
+
+    The ``measure`` attribute is populated by calling the
+    :py:func:`pas.measure.select` function.
+
+    If a ``measure`` attribute is already set on the ``Namespace`` its value
+    will be passed to the the :py:func:`pas.measure.select` function as default
+    value for the selection.
+
+    You can use it like this::
+
+        from pas.commands import select_measure
+
+        @select_measure
+        def command(options):
+            # Do something with the measure
+            print options.measure
+
+    :param func: The command function for which the a case has to be selected.
     """
     @functools.wraps(func)
     def check_and_ask(options):
@@ -90,74 +141,119 @@ def select_measure(func):
 
 def host_option(parser, argument=False):
     """
-    Adds an optional --hosts option to the given parser which always returns a
-    list of the hosts specified on the command line or an empty list if no
-    hosts were specified.
-    
-    If the optional argument flag is set to true, then adds an argument insted
-    of an option.
+    Adds an optional ``--host`` option to the ``parser`` argument.
 
-    Multiple hosts can be specified
+    The given hosts can be read using the ``hosts`` attribute of the
+    ``Namespace`` instance passed to the command to be executed.
+
+    The resulting ``hosts`` attribute will always be a list of the hosts
+    specified on the command line or an empty list if no hosts were specified.
+
+    If the optional ``argument`` flag is set to true, then this decorators adds
+    an argument insted of an option.
+
+    Multiple hosts can be specified using multiple times the ``--host`` option
+    or by giving multiple ``HOST`` arguments as appropriate.
+
+    Use it like this::
+
+        from pas.commands import host_option
+
+        def getparser(parser):
+            host_option(parser)
+
+        def command(options):
+            # Do something with it
+            print options.hosts
+
+    :param parser: The ``ArgumentParser`` instance on which the ``--host``
+                   option shall be attached.
+    :param argument: A flag indicating if the hosts shall be parsed as
+                     arguments instead.
     """
+    helpmsg = """Use this option to specify one or more hosts on which this
+                 command has to be run."""
+
     if argument:
-        help = ""
         parser.add_argument(
             'hosts',
-            metavar='host',
+            metavar='HOST',
             default=[],
-            help=help,
+            help=helpmsg,
             nargs='*'
         )
     else:
-        help = ""
+        helpmsg += """ The --host option can be specifed multiple times to
+                      define multiple hosts."""
+
         parser.add_argument(
             '--host',
             metavar='HOST',
             dest='hosts',
             default=[],
-            help=help,
+            help=helpmsg,
             action='append'
         )
 
 
 def case_argument(parser):
     """
-    Adds an optional test case argument to the given parser.
+    Adds an optional ``case`` argument to the given parser.
 
     No validations are done on the parsed value as the settings have to be
-    loaded to obtain the local test-cases path and they can't be loaded before
-    the full command-line parsing process is completed.
+    loaded to obtain the local measure-cases path and they can't be loaded
+    before the full command-line parsing process is completed.
 
-    To bypass this issue, a select_case command decorator is provided which
-    looks at the argparse.Namespace instance and does all the necessary steps
-    to provide the commad with a valid test case path.
+    To bypass this issue, the :func:`pas.commands.select_case` command
+    decorator can be used which looks at the ``Namespace`` instance and does all
+    the necessary steps to provide the command with a valid measure case path.
+    
+    Use it like this::
+
+        from pas.commands import case_argument, select_case
+
+        def getparser(parser):
+            case_argument(parser)
+
+        @select_case   # Optional
+        def command(options):
+            # Do something with it
+            print options.case
+
+    :param parser: The ``ArgumentParser`` instance on which the ``case``
+                   argument shall be attached.
     """
-    parser.add_argument('case', metavar='test-case', nargs='?')
+    parser.add_argument('case', metavar='MEASURE_CASE', nargs='?')
 
 
 def measure_argument(parser):
     """
-    Adds an optional measure argument to the given parser.
+    Adds an optional ``measure`` argument to the given parser.
 
     No validations are done on the parsed value as the settings have to be
-    loaded to obtain the local shared-measures path and they can't be loaded
-    before the full command-line parsing process is completed.
+    loaded to obtain the local measures path and they can't be loaded before
+    the full command-line parsing process is completed.
 
-    To bypass this issue, a select_measure command decorator is provided which
-    looks at the argparse.Namespace instance and does all the necessary steps
-    to provide the commad with a valid measure path.
+    To bypass this issue, the :func:`pas.commands.select_measure` command
+    decorator can be used which looks at the ``Namespace`` instance and does all
+    the necessary steps to provide the command with a valid measure path.
+    
+    Use it like this::
+
+        from pas.commands import measure_argument, select_measure
+
+        def getparser(parser):
+            measure_argument(parser)
+
+        @select_measure   # Optional
+        def command(options):
+            # Do something with it
+            print options.measure
+
+    :param parser: The ``ArgumentParser`` instance on which the ``measure``
+                   argument shall be attached.
     """
-    parser.add_argument('measure', nargs='?')
-
-
-def case_or_measure_argument(parser):
-    """
-    Adds an optional argument represening either a case or a measure.
-
-    Refer to the two specific functions documentation (case_argument and
-    measure_argument) for further information.
-    """
-    parser.add_argument('case_or_measure', nargs='?')
+    parser.add_argument('measure', metavar="MEASURE", nargs='?')
 
 
 def getdoc(obj):
@@ -200,11 +296,8 @@ def getdoc(obj):
     # Get the full docstring
     fulldoc = '\n'.join(trimmed)
 
-    # Split into paragraphs
-    paragraphs = fulldoc.split('\n\n')
-
     # Return only the first paragraph (joined together)
-    return paragraphs[0].replace('\n', ' ')
+    return "\n\n".join(p.replace('\n', ' ') for p in fulldoc.split('\n\n'))
 
 
 def settingspath(path):
@@ -233,6 +326,15 @@ def settingspath(path):
 
 
 def load_package_subcommands(subparsers, package):
+    """
+    Recursively loads all the subcommands contained in the given package as
+    subparsers for the given subparser.
+    """
+    
+    # pylint: disable-msg=W0212
+    # Disable warning for accessing the _actions member of the ArgumentParser
+    # class.
+    
     log = logging.getLogger('pas.commands_builder')
     directory = os.path.dirname(package.__file__)
 
@@ -253,23 +355,27 @@ def load_package_subcommands(subparsers, package):
             module = imp.load_source(fullname, path)
 
             name = module.__name__.rsplit('.', 1)[-1]
-            
+
             try:
                 command = module.command
             except AttributeError:
                 log = logging.getLogger('pas.commands_builder')
-                log.error("No command found in module {}".format(module.__name__))
+                msg = "No command found in module {}".format(module.__name__)
+                log.error(msg)
             else:
-                subparser = subparsers.add_parser(name, help=getdoc(module))
+                subparser = subparsers.add_parser(name, help=getdoc(command))
+                subparser._actions[0].help = "Show this help message and exit."
                 subparser.set_defaults(execute=command)
                 if hasattr(module, 'getparser'):
                     module.getparser(subparser)
         else:
             # Recursively load the subpackage
-            module = imp.load_source(fullname, os.path.join(path, '__init__.py'))
+            path = os.path.join(path, '__init__.py')
+            module = imp.load_source(fullname, path)
 
             name = module.__name__.rsplit('.', 1)[-1]
             subparser = subparsers.add_parser(name, help=getdoc(module))
+            subparser._actions[0].help = "Show this help message and exit."
             load_package_subcommands(subparser.add_subparsers(), module)
 
 
@@ -289,23 +395,33 @@ def build_parser():
     parser.add_argument('--version', action='version',
                         version='%(prog)s ' + VERSION)
     parser.add_argument('-v', '--verbose', default=list(),
-                        action='append_const', const=1)
+                        action='append_const', const=1, help="Increments the "\
+                        "verbosity (can be used multiple times).")
     parser.add_argument('-q', '--quiet', default=list(),
-                        action='append_const', const=True)
+                        action='append_const', const=1, help="Decrements the "\
+                        "verbosity (can be used multiple times).")
     parser.add_argument('--settings', default=settings,
-                        metavar='SETTINGS_MODULE', type=settingspath)
+                        metavar='SETTINGS_MODULE', type=settingspath,
+                        help="The path to the settings module")
+
+
+    # pylint: disable-msg=W0212
+    # Disable warning for accessing the _actions member of the ArgumentParser
+    # class.
+    parser._actions[0].help = "Show this help message and exit."
+    parser._actions[1].help = "Show program's version number and exit."
 
     # For each module/package in the pas.commands package...
     subparsers = parser.add_subparsers()
     load_package_subcommands(subparsers, sys.modules[__name__])
-    
-    dirs = ('commands', )
-    
+
+    dirs = ()
+
     for d in dirs:
         log.debug("Scanning external directory '{0}' for commands...".format(d))
         module = os.path.basename(d)
-        c = imp.load_source(module, os.path.join(d, '__init__.py'))
-        load_package_subcommands(subparsers, c)
+        package = imp.load_source(module, os.path.join(d, '__init__.py'))
+        load_package_subcommands(subparsers, package)
 
     return parser
 

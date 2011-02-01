@@ -10,8 +10,7 @@ from cStringIO import StringIO
 try:
     import pytidy
 except ImportError:
-    print "Importing local pytidy version"
-    from pas.parser import pytidy
+    from pas import pytidy
 
 
 class Semantics(object):
@@ -97,7 +96,9 @@ class POPRequest(object):
         etree.SubElement(el, 'repr').text = repr(self)
         etree.SubElement(el, 'short').text = str(self)
         
-        etree.SubElement(el, 'highlighted').append(etree.fromstring(self.formatted()))
+        etree.SubElement(el, 'highlighted').append(
+            etree.fromstring(self.formatted())
+        )
         
         return el
 
@@ -131,7 +132,11 @@ class POPRequest(object):
         code = res.getvalue().split('\n', 2)[-1].strip()
         
         # Highlight code
-        return highlight(code, PythonLexer(), HtmlFormatter(cssclass="codehilite", style="pastie"))
+        return highlight(
+            code,
+            PythonLexer(),
+            HtmlFormatter(cssclass="codehilite", style="pastie")
+        )
         
 
     def __repr__(self):
@@ -162,7 +167,11 @@ class POPResponse(object):
         code = res.getvalue().split('\n', 2)[-1].strip()
 
         # Highlight code
-        return highlight(code, PythonLexer(), HtmlFormatter(cssclass="codehilite", style="pastie"))
+        return highlight(
+            code,
+            PythonLexer(),
+            HtmlFormatter(cssclass="codehilite", style="pastie")
+        )
 
     def toxml(self):
         el = etree.Element('response')

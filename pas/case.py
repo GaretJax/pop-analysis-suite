@@ -21,7 +21,22 @@ def select(name=None, basedir=None):
      2. The name is set; check if it was found and if so return it
      3. Only one directory is found; return the found directory
      4. Multiple directories are found; ask the user to pick one
+     
+     
+     a. If no measure case exist yet, a ``RuntimeError`` is thrown;
+     b. If only one measure case is found, its path is returned;
+     c. If more than one measure cases are found, then the user is asked to
+        choose one between them.
 
+     The list presented to the user when asked to choose a case will be
+     something like the following::
+
+         Multiple test cases found:
+
+              [0]: simple
+              [1]: complex
+
+         Select a test case: _
     """
 
     if not basedir:
@@ -34,7 +49,7 @@ def select(name=None, basedir=None):
     paths = [(os.path.join(basedir, p), p) for p in paths]
 
     # Filter out non-directories
-    paths = filter(lambda p: os.path.isdir(p[0]), paths)
+    paths = [p for p in paths if os.path.isdir(p[0])]
 
     # If no entries remained, there are no test cases which can be run
     if not paths:

@@ -1,9 +1,8 @@
-Documentation
-=============
+Usage documentation
+===================
 
 .. toctree::
    
    quick-start
    execution-model
-   commands
    measure-cases

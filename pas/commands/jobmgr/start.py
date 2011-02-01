@@ -1,5 +1,25 @@
 """
-Documentation for the start command
+``pas jobmgr start``
+====================
+
+**Usage:** ``pas jobmgr start [-h] [HOST [HOST ...]]``
+
+positional arguments:
+   .. cmdoption:: HOST
+
+      Use this option to specify one or more hosts on which this command has to
+      be run.
+
+optional arguments:
+  -h, --help   Show this help message and exit.
+
+Starts the ``jobmgr`` on one or more hosts.
+
+If no hosts are provided, then the command first starts the ``master`` hosts
+and then, after accounting for a startup delay, the ``child`` hosts.
+
+If one or more hosts are provided, the ``start`` command is sent to all hosts at
+the same time.
 """
 
 from pas import commands
@@ -14,12 +34,14 @@ from pas import shell
 
 
 def getparser(parser):
-    commands.host_option(parser, argument=1)
+    commands.host_option(parser, argument=True)
 
 
 def command(options):
-    print options.hosts
-    
+    """
+    Starts the jobmgr on the provided hosts. If no hosts are provided, starts
+    the jobmgr on all master and client hosts by accounting for a startup delay.
+    """
     if options.hosts:
         # Hosts manually defined, start them all without delays
         with shell.workon(options.hosts):

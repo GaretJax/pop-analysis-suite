@@ -1,7 +1,7 @@
-.. _commands-reference:
+.. _command-subsystem:
 
-Commands subsystem
-==================
+The command subsystem
+=====================
 
 The ``pas`` commands can be grouped into 4 areas of interest:
 
@@ -25,6 +25,10 @@ Processing
 A fifth group, the **derived commands** group can also be added and contains
 all custom defined workflows resulting from the chaining of different
 "primitive" commands.
+
+.. todo::
+   Make sure this is actually possible, the current implementation does not
+   provide hooks or facilities to work on composite commands.
 
 
 .. _architecture:
@@ -207,14 +211,17 @@ list of directories to be scanned for commands *in addition* to the
 ``pas.commands`` package.
 
 .. todo::
-   Link to the settings documentation
+   Link to the settings documentation.
+
+.. todo::
+   Implement the retrieval of the directories to scan from the settings.
 
 By adding your custom commands directory to the list you can have them
 automatically included in the ``pas`` utility without the need to modify the
 ``pas`` source tree directly.
 
 This is useful if you want to add some commands tied to a particular testing
-environment or – if it is the case – to a particular *measure case*.
+environment or – if it is the case – to a particular :term:`measure case`.
 
 .. note::
    You can override built-in commands simply by specifying a directory
@@ -255,6 +262,5 @@ subcommand:
 
 .. autofunction:: pas.commands.host_option
 .. autofunction:: pas.commands.case_argument
-.. autofunction:: pas.commands.case_or_measure_argument
 .. autofunction:: pas.commands.measure_argument
 

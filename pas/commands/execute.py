@@ -1,7 +1,21 @@
 """
-Executes the given test case on all client hosts.
+``pas execute``
+===============
 
-If no test cases are provided and only one is available, it is executed; if
+**Usage:** ``pas execute [-h] [MEASURE_CASE]``
+
+positional arguments:
+   .. cmdoption:: MEASURE_CASE
+
+      Measure case to execute on all client hosts.
+
+optional arguments:
+  -h, --help   Show this help message and exit.
+
+Executes the given test case on all hosts having a role of ``client``
+(normally only one).
+
+If no measure case is provided and only one is available, it is compiled; if
 more are available, the user is presented with a list of available cases and
 asked to make a choice.
 """
@@ -23,4 +37,8 @@ def getparser(parser):
 
 @commands.select_case
 def command(options):
+    """
+    Executes the given test case on all hosts having a role of client
+    (normally only one).
+    """
     case.execute(options.case[1])

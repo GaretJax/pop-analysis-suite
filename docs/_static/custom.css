@@ -112,6 +112,9 @@ p.admonition-title::after {
 div.footer + hr {
     display: none;
 }
+.section div.admonition p.last {
+    margin-bottom: 0;
+}
 
 
 /* +Notes */
@@ -151,8 +154,48 @@ div.admonition-todo .admonition-title {
     border-top: 1px solid #aaa;
 }
 
+.section dl.cmdoption {
+    border-top: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.section dl.cmdoption:before {
+    border-top: 0;
+    padding: 0;
+    margin: 0;
+}
 
+.section dd > dl.cmdoption > dt {
+    display: block;
+    float: left;
+    min-width: 150px;
+    margin: 0;
+    padding: 1px 8px 1px 5px;
+}
+.section dd > dl.cmdoption > dd {
+    display: block;
+    border-bottom: 1px solid #AAA;
+    margin: 0;
+    padding: 1px 8px 1px 5px;
+}
+.section dd > dl.cmdoption > dd > p:last-child {
+    margin-bottom: 0;
+}
+dd > dl.cmdoption > dt tt.descname {
+    font-weight: normal;
+    color: #3E4349;
+}
 
+.option-list td:last-child {
+    padding-left: 0px;
+}
+td.option-group {
+    white-space: nowrap;
+    width: 150px;
+}
+table.option-list {
+    width: 100%;
+}
 
 
 

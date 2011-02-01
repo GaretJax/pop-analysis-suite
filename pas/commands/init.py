@@ -1,11 +1,24 @@
 """
+``pas init``
+===============
+
+**Usage:** ``pas init [-h] [DIR]``
+
+positional arguments:
+   .. cmdoption:: DIR
+
+      The directory inside which the environment shall be created.
+
+optional arguments:
+  -h, --help   show this help message and exit
+
 Sets up a new measurement and analysis environment in the selected directory
-(the CWD if none is provided).
+(or in the CWD if none is provided).
 
-The directory has not to exist or to exsist and be empty for the command to
-succeed.
+The directory has to be empty or inexistent. The command will fail if the
+directory already exists and is non-empty.
 
-The environment is set up mostly by recursively copying all the files inside
+The environment is mainly set up by recursively copying all the files inside
 pas.conf.suite_template to the newly created directory.
 """
 
@@ -24,11 +37,16 @@ from pas import commands
 
 
 def getparser(parser):
-    parser.add_argument('dir', nargs='?', default='.', type=str,
-                        help='the directory inside which create the suite')
+    parser.add_argument('dir', metavar="DIR", nargs='?', default='.', type=str,
+                        help='The directory inside which the environment ' \
+                             'shall be created')
 
 @commands.nosettings
 def command(options):
+    """
+    Sets up a new measurement and analysis environment in the selected directory
+    (or in the CWD if none is provided).
+    """
     log = logging.getLogger('pas.commands')
     dest = os.path.realpath(options.dir)
     

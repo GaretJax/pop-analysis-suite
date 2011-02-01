@@ -3,6 +3,9 @@ from lxml import etree
 from pas import shell
 
 class Transformation(object):
+    """
+    Object oriented wrapper for XSL transformations using lxml.
+    """
     def __init__(self, stylesheet):
         self.path = stylesheet
         
@@ -11,7 +14,7 @@ class Transformation(object):
         
         self.extensions = {}
     
-    def registerFunction(self, namespace, func, name=None):
+    def register_function(self, namespace, func, name=None):
         if not name:
             name = func.__name__
         
@@ -40,7 +43,10 @@ class Transformation(object):
         return self.transform(*args, **kwargs)
 
 
-def format(infile, outfile=None, local=True):
+def prettyprint(infile, outfile=None, local=True):
+    """
+    Reformats an xml document using xmllint.
+    """
     run = shell.local if local else shell.remote
     outfile = outfile or infile
     

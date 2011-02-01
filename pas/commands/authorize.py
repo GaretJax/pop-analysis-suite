@@ -1,12 +1,29 @@
 """
+``pas authorize``
+=================
+
+**Usage:** ``pas authorize [-h]``
+
+optional arguments:
+  -h, --help  Show this help message and exit.
+
+
 Exchanges the public keys between all VMs and adds each host to the
-known_hosts of each other to allow direct ssh connections between VMs without
-need for external input.
+:file:`known_hosts` file of each other, in order to allow direct ssh
+connections between VMs without need for external input.
 
-This command operates only on the default rsa key and uses the shared
+This command operates only on the default ``rsa`` key and uses the shared
 configuration directory to keep a temporary list of all public keys.
-"""
 
+The function to which this command is bound doesn't need (and doesn't provide)
+any specific command-line options and can thus be called in normal library
+usage without any argument, like in the following example::
+
+    from pas.commands.authorize import command as authorize
+
+    authorize()
+
+"""
 
 import os
 
@@ -16,11 +33,8 @@ from pas.conf import settings
 
 def command(_=None):
     """
-    Executes the command described in the module docstring on all hosts.
-    
-    This command doesn't need (and doesn't provide) any specific command-line
-    options and can thus apt to be called in normal library usage without any
-    argument.
+    Exchanges the public keys between all VMs to allow direct ssh connections
+    between them without user input.
     """
     local, remote = settings.paths['configuration']
     local = os.path.join(local, 'authorized_keys')

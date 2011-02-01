@@ -1,8 +1,8 @@
 """
-``pas jobmgr kill``
+``pas measure kill``
 ====================
 
-**Usage:** ``pas jobmgr kill [-h] [HOST [HOST ...]]``
+**Usage:** ``pas measure kill [-h] [HOST [HOST ...]]``
 
 positional arguments:
    .. cmdoption:: HOST
@@ -13,13 +13,14 @@ positional arguments:
 optional arguments:
   -h, --help   Show this help message and exit.
 
-Kills the ``jobmgr`` on one or more hosts. If no hosts are provided, the
-job managers are killed on all known hosts.
+Kills all the running measures on the given host (or on all hosts if no host
+is given) independently from the capturing interface or the name with which
+they were started.
 """
 
 
 from pas import commands
-from pas import jobmgr
+from pas import tshark
 from pas import shell
 
 
@@ -35,12 +36,10 @@ def getparser(parser):
 
 def command(options):
     """
-    Kills the jobmgr on one or more hosts.
+    Kills all the running measures on the given host (or on all hosts if no host
+    is given) independently from the capturing interface or the name with which
+    they were started.
     """
-    if options.hosts:
-        # Hosts manually defined, start them all without delays
-        with shell.workon(options.hosts):
-            jobmgr.kill()
-    else:
-        jobmgr.killall()
+    with shell.workon(options.hosts):
+        tshark.kill()
 
