@@ -13,7 +13,7 @@ optional arguments:
   -h, --help   Show this help message and exit.
 
 Starts a new measure on all hosts and for each interface as defined in the
-settings ``interfaces`` and ``roles`` directives.
+settings ``INTERFACES`` and ``ROLES`` directives.
 
 .. todo::
    Link to the settings reference.
@@ -47,8 +47,8 @@ def getparser(parser):
 
 def command(options):
     """
-    Starts a new measure on all hosts as defined in the settings interfaces and
-    roles directives.
+    Starts a new measure on all hosts as defined in the settings INTERFACES and
+    ROLES directives.
     """
     measure.start(options.name)
 

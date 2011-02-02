@@ -119,8 +119,11 @@ process.
    Add a section about running tests... and maybe implement the tests too.
 
 
-Documentation
--------------
+Structure of this manual
+------------------------
+
+.. todo::
+   Describe the structure.
 
 The present documentation is written using `Sphinx <http://sphinx.pocoo.org/>`_.
 

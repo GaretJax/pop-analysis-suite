@@ -78,7 +78,7 @@ def remote(cmd, pty=False, user=None, sudo=False):
     if state.env.cwd:
         cmd = 'cd {0} && {1}'.format(state.env.cwd, cmd)
     
-    with _context(user=settings.vm_user, password=settings.vm_password):
+    with _context(user=settings.VM_USER, password=settings.VM_PASSWORD):
         for host in state.env.hosts or all_hosts():
             with _context(host_string=host):
                 if user or sudo:

@@ -139,6 +139,9 @@ and stop ``tshark`` based measures on all or on selected hosts::
    [33.33.33.11] sudo: rm -rf /measures ; mkdir /measures
    [33.33.33.11] sudo: screen -dmS simple.lo.lo tshark -i lo -t e -w /measures/simple.lo.raw 'tcp and not tcp port 22'
 
+.. todo::
+   Check commands 
+
 The ``measure-start`` subcommand cleans up the measure destination directory on
 the target-host and starts a detached named screen session to wrap the ``tshark``
 process. This allows to let measures live between different connections and to

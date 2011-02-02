@@ -6,3 +6,5 @@ _build
 pas.log
 mytestenv
 temp
+build
+dist

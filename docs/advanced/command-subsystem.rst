@@ -89,8 +89,8 @@ all collected measures with no report), then we want to proceed as follows:
       from pas.conf import settings
 
       def command(options):
-          a = '{0}/*'.format(settings.paths['shared-measures'][0])
-          r = '{0}/*/report'.format(settings.paths['shared-measures'][0])
+          a = '{0}/*'.format(settings.PATHS['shared-measures'][0])
+          r = '{0}/*/report'.format(settings.PATHS['shared-measures'][0])
 
           all_reports = set(glob.glob(a))
           already_reported = set([os.path.dirname(d) for d in glob.glob(r)])

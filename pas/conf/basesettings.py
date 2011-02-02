@@ -7,34 +7,39 @@ overridden in the environment and test case level settings module.
 
 # pylint: disable=C0103
 
-vm_user = 'vagrant'
-vm_password = 'vagrant'
+VM_USER = 'vagrant'
+VM_PASSWORD = 'vagrant'
 
-roles = {
+ROLES = {
     'master': ['33.33.33.10'],
     'client': ['33.33.33.10'],
     'slaves': ['33.33.33.11'],
 }
 
-interfaces = {
+INTERFACES = {
     'master': ['eth1', 'lo'],
     'slaves': ['lo'],
     'client': [],
 }
 
-capture_filter = "'tcp and not tcp port 22'"
-display_filter = "'" + ' || '.join((
+CAPTURE_FILTER = "'tcp and not tcp port 22'"
+DISPLAY_FILTER = "'" + ' || '.join((
     "tcp.flags.syn == 1",
     "tcp.flags.push == 1",
     "tcp.flags.fin == 1",
     "tcp.flags.ack == 1"
 )) + "'"
 
-paths = {
+PATHS = {
     'test-cases':      ['cases',   '/share/test-cases'],
     'configuration':   ['conf',    '/share/conf'],
     'local-measures':  [None,      '/measures'],
     'shared-measures': ['reports', '/share/measures'],
 }
 
-startup_delay = shutdown_delay = 2
+STARTUP_DELAY = SHUTDOWN_DELAY = 2
+
+COMMAND_DIRECTORIES = (
+    'commands',
+)
+

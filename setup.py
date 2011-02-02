@@ -37,7 +37,6 @@ setup(
     url='https://github.com/GaretJax/pop-analysis-suite',
     license='MIT',
     packages=find_packages(exclude=['tests']),
-    install_package_data=True,
     package_data = {
         'pas.conf': 
             list(get_files('pas.conf.suite_template')) +

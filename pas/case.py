@@ -40,7 +40,7 @@ def select(name=None, basedir=None):
     """
 
     if not basedir:
-        basedir = settings.paths['test-cases'][0]
+        basedir = settings.PATHS['test-cases'][0]
 
     # Get all files in the directory
     paths = os.listdir(basedir)
@@ -107,7 +107,7 @@ def compile(name, localdir=None, remotedir=None):
     """
     # Read the defaults from the settings if the arguments are not provided
     if not localdir or not remotedir:
-        paths = settings.paths['test-cases']
+        paths = settings.PATHS['test-cases']
 
         if not localdir:
             localdir = paths[0]
@@ -131,12 +131,12 @@ def execute(name, remotedir=None):
     Executes the given test case on all client hosts (normally onle one).
     """
     if not remotedir:
-        remotedir = settings.paths['test-cases'][1]
+        remotedir = settings.PATHS['test-cases'][1]
 
     remote = os.path.join(remotedir, name)
 
     with shell.workon(role('client')):
         with shell.cd(remote):
-            shell.remote('make run', pty=True)
+            shell.remote('make execute', pty=True)
 
 

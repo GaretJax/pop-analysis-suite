@@ -35,6 +35,7 @@ import sys
 from pas import VERSION
 from pas import case
 from pas import measure
+from pas.conf import settings
 
 
 def nosettings(func):
@@ -207,7 +208,7 @@ def case_argument(parser):
     To bypass this issue, the :func:`pas.commands.select_case` command
     decorator can be used which looks at the ``Namespace`` instance and does all
     the necessary steps to provide the command with a valid measure case path.
-    
+
     Use it like this::
 
         from pas.commands import case_argument, select_case
@@ -237,7 +238,7 @@ def measure_argument(parser):
     To bypass this issue, the :func:`pas.commands.select_measure` command
     decorator can be used which looks at the ``Namespace`` instance and does all
     the necessary steps to provide the command with a valid measure path.
-    
+
     Use it like this::
 
         from pas.commands import measure_argument, select_measure
@@ -330,11 +331,11 @@ def load_package_subcommands(subparsers, package):
     Recursively loads all the subcommands contained in the given package as
     subparsers for the given subparser.
     """
-    
+
     # pylint: disable-msg=W0212
     # Disable warning for accessing the _actions member of the ArgumentParser
     # class.
-    
+
     log = logging.getLogger('pas.commands_builder')
     directory = os.path.dirname(package.__file__)
 
@@ -379,14 +380,12 @@ def load_package_subcommands(subparsers, package):
             load_package_subcommands(subparser.add_subparsers(), module)
 
 
-def build_parser():
+def build_mainparser():
     """
-    Builds the complete command-line parser for the pas program by asking each
-    command module inside the pas.commands package for subparser customization
-    as described in the package docstring.
+    Builds the base parser for the main ``pas`` command, without accounting
+    for subcommands but already including the --``settings`` directive in
+    order to be able to load the settings before searching for subcommands.
     """
-    log = logging.getLogger('pas.commands_builder')
-
     # Get default path to the settings module
     settings = os.getenv('PAS_SETTINGS_MODULE') or os.getcwd()
 
@@ -411,17 +410,33 @@ def build_parser():
     parser._actions[0].help = "Show this help message and exit."
     parser._actions[1].help = "Show program's version number and exit."
 
+    return parser
+
+
+def build_subparsers(parser):
+    """
+    Builds the complete command-line parser for the pas program by asking each
+    command module inside the pas.commands package for subparser customization
+    as described in the package docstring.
+    """
+    log = logging.getLogger('pas.commands_builder')
+
     # For each module/package in the pas.commands package...
     subparsers = parser.add_subparsers()
     load_package_subcommands(subparsers, sys.modules[__name__])
 
-    dirs = ()
+    if not settings.ENV_BASE:
+        return parser
 
-    for d in dirs:
-        log.debug("Scanning external directory '{0}' for commands...".format(d))
-        module = os.path.basename(d)
-        package = imp.load_source(module, os.path.join(d, '__init__.py'))
-        load_package_subcommands(subparsers, package)
+    for directory in settings.COMMAND_DIRECTORIES:
+        directory = os.path.join(settings.ENV_BASE, directory)
+        log.debug("Scanning external directory '{0}' for commands...".format(
+                  directory))
+        module = os.path.basename(directory)
+        module_path = os.path.join(directory, '__init__.py')
+        if os.path.isfile(module_path):
+            package = imp.load_source(module, module_path)
+            load_package_subcommands(subparsers, package)
 
     return parser
 

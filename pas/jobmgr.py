@@ -73,14 +73,14 @@ def startall():
         start()
 
     # Wait some (configurable) time. One or two seconds should be enough here
-    time.sleep(settings.startup_delay)
+    time.sleep(settings.STARTUP_DELAY)
 
     # And now start the slaves
     with shell.workon(role('slaves')):
         start()
 
     # Wait again some time for possible subsequent programs execution
-    time.sleep(settings.startup_delay)
+    time.sleep(settings.STARTUP_DELAY)
 
 
 def stopall():
@@ -100,12 +100,12 @@ def stopall():
     with shell.workon(role('slaves')):
         stop()
 
-    time.sleep(settings.shutdown_delay)
+    time.sleep(settings.SHUTDOWN_DELAY)
 
     with shell.workon(role('master')):
         stop()
 
-    time.sleep(settings.shutdown_delay)
+    time.sleep(settings.SHUTDOWN_DELAY)
 
 
 def restartall():

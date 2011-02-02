@@ -36,7 +36,7 @@ def command(_=None):
     Exchanges the public keys between all VMs to allow direct ssh connections
     between them without user input.
     """
-    local, remote = settings.paths['configuration']
+    local, remote = settings.PATHS['configuration']
     local = os.path.join(local, 'authorized_keys')
     remote = os.path.join(remote, 'authorized_keys')
 

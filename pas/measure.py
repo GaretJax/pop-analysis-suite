@@ -41,7 +41,7 @@ def select(name=None, basedir=None):
     name = name.rsplit('_', 2) if name else ()
 
     if not basedir:
-        basedir = settings.paths['shared-measures'][0]
+        basedir = settings.PATHS['shared-measures'][0]
 
     # Get all files in the directory
     paths = os.listdir(basedir)
@@ -101,11 +101,11 @@ def start(name):
     """
     Start a new named measure session in background on all interested hosts.
 
-    The hosts are retrieved from the interfaces setting directive and a
+    The hosts are retrieved from the ROLES setting directive and a
     measure is started for each one.
     """
-    dest = settings.paths['local-measures'][1]
-    fltr = settings.capture_filter
+    dest = settings.PATHS['local-measures'][1]
+    fltr = settings.CAPTURE_FILTER
 
     for host, interfaces in map_interfaces():
         with shell.workon(host):
@@ -145,8 +145,8 @@ def collect(name, overwrite=False):
     ipaddr = '$(getip eth1)'
     name = "{0}_{1}".format(name, datetime.now().strftime('%Y-%m-%d_%H:%M'))
 
-    guest_local = settings.paths['local-measures'][1]
-    host_shared, guest_shared = settings.paths['shared-measures']
+    guest_local = settings.PATHS['local-measures'][1]
+    host_shared, guest_shared = settings.PATHS['shared-measures']
     destination = os.path.join(guest_shared, name, ipaddr)
     local = os.path.realpath(os.path.join(host_shared, name))
 
@@ -164,7 +164,7 @@ def collect(name, overwrite=False):
         if e.errno != errno.ENOENT:
             raise
 
-    shell.remote('chown -R {0}:{0} {1}'.format(settings.vm_user, guest_local),
+    shell.remote('chown -R {0}:{0} {1}'.format(settings.VM_USER, guest_local),
                  sudo=True)
     shell.remote('mkdir -p "{0}"'.format(destination))
     shell.remote('cp {0}/* "{1}"'.format(guest_local, destination))
@@ -177,7 +177,7 @@ def toxml(name):
 
     This will overwrite all already converted files with matching names.
     """
-    host_shared, guest_shared = settings.paths['shared-measures']
+    host_shared, guest_shared = settings.PATHS['shared-measures']
     pattern = os.path.join(host_shared, name, "*", "*.raw")
 
     paths = glob.glob(pattern)
@@ -185,7 +185,8 @@ def toxml(name):
 
     with shell.workon(role('client')):
         for path in paths:
-            tshark.pcaptoxml(path, path.replace('.raw', '.xml'))
+            tshark.pcaptoxml(path, path.replace('.raw', '.xml'),
+                             settings.DISPLAY_FILTER)
 
 
 def simplify(name, prettyprint=True):
@@ -197,7 +198,7 @@ def simplify(name, prettyprint=True):
     If the prettyprint optional argument is True, the result will be formatted
     using the xmllint tool.
     """
-    host_shared = settings.paths['shared-measures'][0]
+    host_shared = settings.PATHS['shared-measures'][0]
     pattern = os.path.join(host_shared, name, "*", "*.xml")
 
     simplifier = xml.Transformation(stylesheet('simplify.xsl'))
@@ -282,7 +283,7 @@ def decode(name, prettyprint=False):
                             _decode, 'decode')
 
     # Apply transformation to all simplified xml files
-    host_shared = settings.paths['shared-measures'][0]
+    host_shared = settings.PATHS['shared-measures'][0]
     pattern = os.path.join(host_shared, name, "*", "*.simple.xml")
 
     for source in glob.glob(pattern):
@@ -327,7 +328,7 @@ def report(name):
     
     trans.register_function('http://gridgroup.eia-fr.ch/popc', format_stream)
     
-    host_shared = settings.paths['shared-measures'][0]
+    host_shared = settings.PATHS['shared-measures'][0]
     destination = os.path.join(host_shared, name, 'report')
 
     shutil.rmtree(destination, True)

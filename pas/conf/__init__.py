@@ -30,6 +30,8 @@ class Settings(object):
         Creates a new Setting instance by loading the optional defaults from
         the given module.
         """
+        self.last_path = None
+        
         if defaults:
             if isinstance(defaults, basestring):
                 self.loadfrompath(module=defaults)
@@ -47,7 +49,7 @@ class Settings(object):
         log.debug("Loading settings from '{0}'".format(module.__file__))
         
         for key, value in module.__dict__.iteritems():
-            if not key.startswith('_'):
+            if not key.startswith('_') and key.isupper():
                 setattr(self, key, value)
     
     def loadfrompath(self, path=None, module='settings'):
@@ -64,13 +66,14 @@ class Settings(object):
             __import__(module, level=0)
             _settings = sys.modules[module]
         except ImportError:
-            log.critical("Could not load settings, module not found on path:")
+            log.debug("Could not load settings, module not found on path:")
             
             for i in sys.path:
                 log.debug(" - checked: {0}".format(i))
             
             raise
         else:
+            self.ENV_BASE = os.path.dirname(_settings.__file__)
             self.load(_settings)
         finally:
             if path:
@@ -117,35 +120,35 @@ def stylesheet(name):
     Returns the full path to the XSL stylesheet with the given name inside the
     directory defined in the confguration path.
     """
-    return os.path.join(settings.paths['configuration'][0], 'templates', name)
+    return os.path.join(settings.PATHS['configuration'][0], 'templates', name)
 
 
 def all_hosts():
     """
-    Returns a set of all hosts obtained by chaining all hosts in the roles
+    Returns a set of all hosts obtained by chaining all hosts in the ROLES
     settings directive.
     """
-    return set(itertools.chain(*settings.roles.values()))
+    return set(itertools.chain(*settings.ROLES.values()))
 
 
 def role(role_name):
     """
     Returns a list of all hosts for a given role.
     """
-    return settings.roles[role_name]
+    return settings.ROLES[role_name]
 
 
 def map_interfaces():
     """
     Returns a dict mapping host connection strings to interfaces, obtained by
-    combining the roles and interfaces settings directives.
+    combining the INTERFACES and ROLES settings directives.
     """
     mapping = defaultdict(set)
 
-    for role_name, hosts in settings.roles.iteritems():
+    for role_name, hosts in settings.ROLES.iteritems():
         for host in hosts:
             try:
-                mapping[host] |= set(settings.interfaces[role_name])
+                mapping[host] |= set(settings.INTERFACES[role_name])
             except KeyError:
                 pass
 

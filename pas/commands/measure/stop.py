@@ -13,7 +13,7 @@ optional arguments:
   -h, --help   Show this help message and exit.
 
 Stops all the measures on the different interfaces named ``MEASURE_NAME`` on all
-hosts as defined by the ``interfaces`` and ``roles`` settings directives.
+hosts as defined by the ``INTERFACES`` and ``ROLES`` settings directives.
 
 .. todo::
    Link to the settings reference.
@@ -38,12 +38,11 @@ def getparser(parser):
                         "the measure to stop.")
 
 
-@commands.select_case
 def command(options):
     """
     Stops all the measures on the different interfaces named MEASURE_NAME on all
-    hosts as defined by the interfaces and roles settings directives.
+    hosts as defined by the INTERFACES and ROLES settings directives.
     """
-    measure.stop(options.case[1])
+    measure.stop(options.name)
 
 

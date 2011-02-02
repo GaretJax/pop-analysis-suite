@@ -6,3 +6,4 @@ Usage documentation
    quick-start
    execution-model
    measure-cases
+   configuration

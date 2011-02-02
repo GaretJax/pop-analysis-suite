@@ -11,6 +11,7 @@ flag is set.
 """
 
 
+import itertools
 import logging
 import logging.handlers
 import os
@@ -61,7 +62,7 @@ def main():
 
     # Buffer the logging until no errors happen
     buffered_handler = logging.handlers.MemoryHandler(9999, logging.CRITICAL)
-    
+
     # Capture all logging output and write it to the specified log file
     file_handler = logging.FileHandler('pas.log', 'w', delay=True)
     file_handler.setFormatter(file_formatter)
@@ -71,12 +72,15 @@ def main():
     logger.setLevel(1)
     logger.addHandler(console_handler)
     logger.addHandler(buffered_handler)
-    
-    # Build parser
-    parser = commands.build_parser()
 
-    # Parse arguments
-    command = args = parser.parse_args()
+    # Build base parser
+    parser = commands.build_mainparser()
+    arguments = itertools.takewhile(lambda x: x.startswith('-'), sys.argv[1:])
+    arguments = (arg for arg in arguments if arg not in ('-h', '--help'))
+    command_line = sys.argv[:1] + list(arguments)
+
+    # Parse the base arguments (verbosity and settings)
+    args, remaining = parser.parse_known_args(command_line)
 
     buffered_handler.setTarget(file_handler)
 
@@ -87,14 +91,29 @@ def main():
     paramiko_logger = logging.getLogger('paramiko.transport')
     paramiko_logger.setLevel(verbosity + 10)
 
+    # Load settings
+    try:
+        settings.loadfrompath(path=args.settings)
+        nosettings = False
+    except ImportError:
+        from ..conf import basesettings
+        settings.load(basesettings)
+        nosettings = True
+
+    # Build complete parser
+    parser = commands.build_subparsers(parser)
+
+    # Parse arguments
+    command = args = parser.parse_args()
+
     res = 0
 
-    # Load settings if needed
-    if not getattr(command.execute, 'nosettings', False):
-        try:
-            settings.loadfrompath(path=args.settings)
-        except ImportError:
-            res = 1
+    # Check that settings where loaded if needed
+    if not getattr(command.execute, 'nosettings', False) and nosettings:
+        logger.critical("This command requires the settings module to be " \
+                        "present on path or defined using the " \
+                        "PAS_SETTINGS_MODULE environment variable.")
+        res = 1
 
     # Execute command
     if not res:
@@ -104,7 +123,7 @@ def main():
         for key in connections.keys():
             connections[key].close()
             del connections[key]
-    
+
     # Check execution result
     if res:
         # ...an error occurred, write the logfile
@@ -116,11 +135,11 @@ def main():
     else:
         # ...no errors occurred, avoid to flush the buffer
         buffered_handler.setTarget(None)
-    
+
     # Need to close the buffered handler before sysexit is called or it will
     # result in an exception
     buffered_handler.close()
-    
+
     return res
 
 
