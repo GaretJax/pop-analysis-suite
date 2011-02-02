@@ -41,8 +41,8 @@ setup(
     package_data = {
         'pas.conf': 
             list(get_files('pas.conf.suite_template')) +
-            list(get_files('pas.conf.htdocs'))) +
-            list(get_files('pas.conf.templates')))
+            list(get_files('pas.conf.htdocs')) +
+            list(get_files('pas.conf.templates'))
     },
     install_requires=[
         'fabric',
