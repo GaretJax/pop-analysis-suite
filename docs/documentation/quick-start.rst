@@ -59,7 +59,8 @@ The entries in the listing have the following roles:
  * ``conf``: Directory containing all environment specific configurations.
    Especially noteworthy is the ``chef`` subdirectory which holds the full VM
    configuration scripts. Also contained in this directory are the ``xsl``
-   templates used for the measure simplification and report generation.
+   templates used for the measure simplification and report generation and a
+   base ``makefile`` to facilitate the creation of measure cases.
 
  * ``contrib``: Contributed assets and sourced to be used inside the
    environment. Already contained in this directory is a patched pop-c++
@@ -133,7 +134,7 @@ Once the sources are compiled, we are ready to run our measure. Measuring is
 done through a ``tshark`` instance per host. ``pas`` provides commands to start
 and stop ``tshark`` based measures on all or on selected hosts::
 
-   $ pas measure start
+   $ pas measure start testmeasure
    
    Only one test case found: simple.
    [33.33.33.10] sudo: rm -rf /measures ; mkdir /measures   
@@ -170,7 +171,7 @@ Once been through these different steps and having waited for the measured
 program to terminated, the ``jobmgr``'s can be shut down and the measure
 terminated. In short, this comes back to the following two commands::
 
-   $ pas jobmgr stop ; pas measure stop
+   $ pas jobmgr stop ; pas measure stop testmeasure
 
 Congratulations, you just measured your first pop program using the POP
 Analysis Suite, but the work is not over yet; all of the assets resulting from
@@ -186,7 +187,7 @@ As anticipated above, all of the measures are still scattered over the
 different virtual machines. The first step which has to be done to generate a 
 report is to collect them in a unique place::
 
-   $ pas measure collect
+   $ pas measure collect testmeasure
 
 This command has the effect to gather all different measure files and place
 them in an appropriate tree structure inside the ``report`` directory. The
@@ -195,12 +196,12 @@ then by the IP of the originating virtual machine.
 
 Once all files are collected, we can begin to process them::
 
-   $ pas measure toxml     # Converts all measures to xml documents.
+   $ pas report toxml      # Converts all measures to xml documents.
 
-   $ pas measure simplify  # Simplifes the xml document by stripping
+   $ pas report simplify   # Simplifes the xml document by stripping
                            # unnecessary informations.
 
-   $ pas measure decode    # Annotates the xml documents with the decoded
+   $ pas report decode     # Annotates the xml documents with the decoded
                            # POP Protocol payload.
 
 The execution of these commands (the execution order is relevant) produces 3
@@ -219,7 +220,7 @@ The final step allows to generated an HTML document containing the visual
 representation of the full measure and some additional information. To launch
 it run::
 
-   $ pas measure report
+   $ pas report report
 
 To display the generated report in your browser, simply open the ``index.html``
 file found in the ``reports/<case-name>_<timestamp>/report`` directory.

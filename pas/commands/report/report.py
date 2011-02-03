@@ -22,6 +22,9 @@ decoded measure named ``MEASURE``.
    
 .. todo::
    Check syntax of all commands as they changed slightly
+
+.. todo::
+   Conditionally invoke tidy.
 """
 
 

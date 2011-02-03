@@ -17,6 +17,10 @@ settings ``INTERFACES`` and ``ROLES`` directives.
 
 .. todo::
    Link to the settings reference.
+   
+.. todo::
+   Is the measure name parameter really necessary? We can only run one measure
+   at a time.
 
 The measure is started in a detached named screen session to be able to
 disconnect from the remote host while letting the measure run. The same name
