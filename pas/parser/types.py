@@ -7,10 +7,22 @@ from lxml import etree
 # pylint: disable-msg=C0103,C0111
 
 class cls(object):
+    """
+    Allows to define and automatically register a new POP class.
+    
+    :param id: The classid to which this class will be mapped.
+    :param name: The name to use as string representation of this class.
+                 Normally its always the original class name.
+    :param methods: The list of methods bound to an instance of this class.
+    
+    :type id: int
+    :type name: ``str`` or ``unicode`` compatible object
+    :type methods: list of :ref:`pas.parser.types.func` objects
+    """
     def __init__(self, id, name, methods):
         self.id = id
         self.name = name
-        self.methods = dict([(m.id, m) for m in methods])
+        self.methods = __builtin__.dict([(m.id, m) for m in methods])
         registry.current_registry.register_class(self)
 
     def __str__(self):
@@ -24,6 +36,19 @@ class cls(object):
 
 
 class exc(cls):
+    """
+    Allows to define and automatically register a new POP exception type.
+    
+    :param id: The exception ID to which this exception will be mapped.
+    :param name: The name to use as string representation of this exception.
+                 Normally its always the original exception name.
+    :param properties: The list of properties bound to an instance of this
+                       exception.
+    
+    :type id: int
+    :type name: ``str`` or ``unicode`` compatible object
+    :type properties: list of POP Parser DSL types
+    """
     def __init__(self, id, name, properties):
         self.id = id
         self.name = name
@@ -34,6 +59,31 @@ class exc(cls):
         return [p(decoder) for p in self.properties]
 
 class func(object):
+    """
+    Allows to define a new POP method bound to a specific class instance. The
+    method itself will never know to which class it belongs; to bind a method
+    to a class insert it in the ``methods`` argument at class declaration time.
+    
+    :param id: The method ID to which this method will be mapped.
+    :param name: The name to use as string representation of this method.
+                 Normally its always the original method name.
+    :param args: A list of arguments taken by this method. The provided types
+                 will be directly used to decode the payload. Any built-in or
+                 custom defined scalar or complex type is accepted.
+    :param retypes: A list of types of the values returned by this method. The
+                    provided types will be directly used to decode the payload.
+                    Any built-in or custom defined scalar or complex type is
+                    accepted.
+                    
+                    Note that an ``[out]`` argument will be present in the
+                    POP response and shall thus be inserted into the
+                    ``retypes`` list.
+    
+    :type id: int
+    :type name: ``str`` or ``unicode`` compatible object
+    :type args: list of POP Parser DSL types
+    :type retypes: list of POP Parser DSL types
+    """
     def __init__(self, id, name, args, retypes):
         self.id = id
         self.name = name
@@ -58,25 +108,16 @@ class func(object):
         return [r(decoder) for r in self.retypes]
 
 
-def compound(name, *parts):
-    model = namedtuple(name, ' '.join(p[0] for p in parts))
-
-    def decoder(stream):
-        return model(**dict([(name, type(stream)) for name, type in parts]))
-
-    return decoder
-
-
 def string(stream):
     return stream.unpack_string()[:-1]
 
 
 def uint(stream):
-    return xdrlib.Unpacker.unpack_uint(stream)
+    return stream.unpack_uint()
 
 
 def int(stream):
-    return xdrlib.Unpacker.unpack_int(stream)
+    return stream.unpack_int()
 
 
 def popbool(stream):
@@ -88,22 +129,82 @@ def popbool(stream):
 
 
 def bool(stream):
-    return xdrlib.Unpacker.unpack_bool(stream)
+    return stream.unpack_bool()
 
 
 def float(stream):
-    return xdrlib.Unpacker.unpack_float(stream)
+    return stream.unpack_float()
+
+
+
+def compound(name, *parts):
+    """
+    Creates a new compound type consisting of different parts. The parts are
+    specified by the ``parts`` argument and read one adter the other from the
+    POP payload.
+    
+    :param name: The name to give to the new type, used when pretty printing
+                 the value.
+    :param parts: The actual definition of the compound type.
+    :type parts: list of ``(name, type)`` tuples
+    
+    Use it like this::
+        
+        NewType = compound('NewTypeName',
+            ('member_1', string),
+            ('member_2', int),
+            ('member_3', float)
+            # ...
+        )
+        
+    """
+    model = namedtuple(name, ' '.join(p[0] for p in parts))
+
+    def decoder(stream):
+        return model(**__builtin__.dict([(name, type(stream)) for name, type in parts]))
+
+    return decoder
 
 
 def dict(key, value):
+    """
+    Creates a new complex type mapping keys to values. All keys will share the
+    same value type and so will all values.
+    
+    :param key: The type to use to decode the key.
+    :param value: The type to use to decode the value.
+    
+    Use it like this::
+        
+        # SomeCompoundType.dict_member will hold a mapping of strings to integers
+        
+        SomeCompoundType = compound('SomeCompountTypeName',
+            # ...other members...
+            ('dict_member', dict(string, float)),
+        )
+        
+    """
     def decoder(stream):
-        return dict([(key(stream), value(stream)) for i in range(int(stream))])
+        return __builtin__.dict([(key(stream), value(stream)) for i in range(int(stream))])
     return decoder
 
 
 def array(type):
     """
-    Length prefixed array of homogeneous items.
+    Creates a new complex type representing a length prefixed array of
+    homogeneous items.
+    
+    :param type: The type of each item in the array.
+    
+    Use it like this::
+    
+        # SomeCompoundType.array_member will hold a variable length array of ints
+    
+        SomeCompoundType = compound('SomeCompountTypeName',
+            # ...other members...
+            ('array_member', array(int)),
+        )
+    
     """
     # Work around to the standard xdrlib to provide the argument to the type
     # function as it is not passed by the unpack_farray method of the Unpacker
@@ -117,6 +218,30 @@ def array(type):
 
 
 def optional(type, unpack_bool=popbool):
+    """
+    Special composer type which allows to declare a structure member as
+    optional. An optional member is member prefixed by a ``bool`` flag; the
+    flag is first read, if it yields ``true``, it means that the value was
+    encoded and it can be read, if it yields ``false``, it means that no value
+    was encoded and the member is skipped.
+    
+    :param type: The type of the optional value.
+    :param unpack_bool: The type to use to decode the boolean flag. Defaults
+                        to :c:type:`popbool`, but can be changed to ``bool`` if
+                        the encoding is done in an RPC compliant way.
+    :type unpack_bool: callable
+    
+    Use it like this::
+
+       # SomeCompoundType.optional_member will hold a string if it was encoded
+       # or None if it was not encoded
+
+       SomeCompoundType = compound('SomeCompountTypeName',
+           # ...other members...
+           ('optional_member', string),
+       )
+
+    """
     def unpack(stream):
         if unpack_bool(stream):
             return type(stream)
@@ -138,14 +263,14 @@ NodeInfo = compound('NodeInfo',
     ('networkBandwidth', int),
     ('diskSpace', int),
     ('protocol', string),
-    ('encoding', string),
+    ('encoding', string)
 )
 
 
 ExplorationList = array(
     compound('ListNode',
         ('nodeId', string),
-        ('visited', array(string)),
+        ('visited', array(string))
     )
 )
 
@@ -173,7 +298,7 @@ ObjectDescription = compound('ObjectDescription',
     ('platforms', string),
     ('protocol', string),
     ('encoding', string),
-    ('attributes', dict(string, string)),
+    ('attributes', dict(string, string))
 )
 
 
@@ -201,7 +326,7 @@ Request = compound('Request',
 Response = compound('Response',
     ('uid', string),
     ('nodeInfo', NodeInfo),
-    ('explorationList', ExplorationList),
+    ('explorationList', ExplorationList)
 )
 
 
@@ -230,7 +355,7 @@ POPCSearchNode = compound('POPCSearchNode_UnknownSerializationFormat',
     ('nodeid22', int),
     ('nodeid23', int),
     ('nodeid24', string),
-    ('nodeid25', int),
+    ('nodeid25', int)
 )
 
 
@@ -243,7 +368,7 @@ POPCSearchNodeInfo = compound('POPCSearchNodeInfo',
     ('networkBandwidth', int),
     ('diskSpace', int),
     ('protocol', string),
-    ('encoding', string),
+    ('encoding', string)
 )
 
 

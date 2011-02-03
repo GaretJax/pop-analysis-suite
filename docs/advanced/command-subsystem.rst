@@ -1,7 +1,7 @@
 .. _command-subsystem:
 
-The command subsystem
-=====================
+Custom subcommands
+==================
 
 The ``pas`` commands can be grouped into 4 areas of interest:
 
@@ -28,7 +28,8 @@ all custom defined workflows resulting from the chaining of different
 
 .. todo::
    Make sure this is actually possible, the current implementation does not
-   provide hooks or facilities to work on composite commands.
+   provide hooks or facilities to work on composite commands. OK
+   Instead document how to compose commands inside makefiles
 
 
 .. _architecture:
@@ -146,7 +147,7 @@ all collected measures with no report), then we want to proceed as follows:
 
 The example illustrated above covers the basics of creating a new subcommand
 for the ``pas`` command line utility, but some more techniques allows to
-achieve an higher degree of flexibility, naming :ref:`recursive subcommands`
+achieve an higher degree of flexibility, namely :ref:`recursive subcommands`
 and :ref:`external directory scanning`.
 
 
@@ -212,9 +213,6 @@ list of directories to be scanned for commands *in addition* to the
 
 .. todo::
    Link to the settings documentation.
-
-.. todo::
-   Implement the retrieval of the directories to scan from the settings.
 
 By adding your custom commands directory to the list you can have them
 automatically included in the ``pas`` utility without the need to modify the

@@ -1,4 +1,6 @@
 """
+.. _pas-compile:
+
 ``pas compile``
 ===============
 

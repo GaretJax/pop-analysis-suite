@@ -7,6 +7,9 @@ This section is dedicated to the description of the usage and the effects of
 the different commands and subcommands bundled with the ``pas`` command line
 tool.
 
+.. todo::
+   Double check all commands syntax and their effective inclusion in this
+   document.
 
 The main ``pas`` command
 ------------------------

@@ -30,16 +30,16 @@
 	<xsl:template match="/">
 		<html>
 			<head>
-				<meta charset="utf-8" />
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 				
 				<title>Report</title>
 				
 				<link rel="stylesheet" href="styles/master.css" type="text/css" charset="utf-8" />
 				<link rel="stylesheet" href="styles/pygments/pastie.css" type="text/css" charset="utf-8" />
 				
-				<script type="text/javascript" src="scripts/libs/jquery-1.5.js"></script>
-				<script type="text/javascript" src="scripts/plugins.js"></script>
-				<script type="text/javascript" src="scripts/master.js"></script>
+				<script type="text/javascript" src="scripts/libs/jquery-1.5.js"><xsl:comment> - </xsl:comment></script>
+				<script type="text/javascript" src="scripts/plugins.js"><xsl:comment> - </xsl:comment></script>
+				<script type="text/javascript" src="scripts/master.js"><xsl:comment> - </xsl:comment></script>
 			</head>
 			
 			<body>
@@ -50,24 +50,55 @@
 				<xsl:call-template name="navigation" />
 				
 				<section id="diagram">
-					<table class="transactions">
+					<table class="transactions" summary="Communication diagram">
 						<xsl:apply-templates />
 					</table>
+				</section>
+				
+				<section id="logs" class="file-browser">
+					<xsl:call-template name="file-browser">
+						<xsl:with-param name="files" select="func:logs()" />
+					</xsl:call-template>
+				</section>
+				
+				<section id="source-code" class="file-browser">
+					<xsl:call-template name="file-browser">
+						<xsl:with-param name="files" select="func:sources()" />
+					</xsl:call-template>
 				</section>
 			</body>
 		</html>
 	</xsl:template>
 	
+	<xsl:template name="file-browser">
+		<xsl:param name="files"/>
+		
+		<ul>
+			<xsl:for-each select="$files/file">
+				<li><a href="#"><xsl:value-of select="@name"/></a></li>
+			</xsl:for-each>
+		</ul>
+		
+		<xsl:for-each select="$files/file">
+			<section class="file">
+				<table>
+					<xsl:attribute name="summary">
+						<xsl:value-of select="concat('Source of file ', @name)"/>
+					</xsl:attribute>
+					<func:highlighted select="@path" />
+				</table>
+			</section>
+		</xsl:for-each>
+	</xsl:template>
+	
 	<xsl:template name="navigation">
 		<nav>
 			<ul>
-				<li><a href="#summary">Summary</a></li>
-				<li class="active"><a href="#diagram">Diagram</a></li>
-				<li><a href="#log">Measure log</a></li>
-				<li><a href="#code">Code</a></li>
+				<li><a href="#diagram">Diagram</a></li>
+				<li><a href="#logs">Measure logs</a></li>
+				<li><a href="#source-code">Source code</a></li>
 			</ul>
 			<ul>
-				<li><xsl:comment> - </xsl:comment></li>
 				<li class="frame-filter-bar">
 					<div class="flags-filter">
 						<strong>Show:</strong>
@@ -212,6 +243,7 @@
 							<xsl:attribute name="colspan">
 								<xsl:value-of select="$before"/>
 							</xsl:attribute>
+							<xsl:comment> - </xsl:comment>
 						</td>
 					</xsl:if>
 					
@@ -227,52 +259,55 @@
 							<xsl:attribute name="colspan">
 								<xsl:value-of select="$after"/>
 							</xsl:attribute>
+							<xsl:comment> - </xsl:comment>
 						</td>
 					</xsl:if>
 					
 					<td class="details">
-						<ul class="bubbles flags">
-							<xsl:if test="@syn=1"><li class="syn" title="SYN flag set">SYN</li></xsl:if>
-							<xsl:if test="@fin=1"><li class="fin" title="FIN flag set">FIN</li></xsl:if>
-							<xsl:if test="@psh=1"><li class="psh" title="PSH flag set">PSH</li></xsl:if>
-							<xsl:if test="@ack=1"><li class="ack" title="ACK flag set">ACK</li></xsl:if>
-						</ul>
-						<xsl:if test="decoded">
-							<ul class="bubbles type">
-								<xsl:if test="decoded/request"><li class="req" title="Request">→</li></xsl:if>
-								<xsl:if test="decoded/response"><li class="res" title="Response">←</li></xsl:if>
-								<xsl:if test="decoded/exception"><li class="exc" title="Exception">×</li></xsl:if>
+						<div>
+							<ul class="bubbles flags">
+								<xsl:if test="@syn=1"><li class="syn" title="SYN flag set">SYN</li></xsl:if>
+								<xsl:if test="@fin=1"><li class="fin" title="FIN flag set">FIN</li></xsl:if>
+								<xsl:if test="@psh=1"><li class="psh" title="PSH flag set">PSH</li></xsl:if>
+								<xsl:if test="@ack=1"><li class="ack" title="ACK flag set">ACK</li></xsl:if>
 							</ul>
-						</xsl:if>
-						<xsl:if test="decoded/request">
-							<ul class="bubbles semantics">
-								<xsl:if test="decoded/request/semantics/@seq = 1"><li class="seq" title="Sequential">SEQ</li></xsl:if>
-								<xsl:if test="decoded/request/semantics/@conc = 1"><li class="conc" title="Concurrent">CONC</li></xsl:if>
-								<xsl:if test="decoded/request/semantics/@mutex = 1"><li class="mutex" title="Mutex">MTX</li></xsl:if>
+							<xsl:if test="decoded">
+								<ul class="bubbles type">
+									<xsl:if test="decoded/request"><li class="req" title="Request">→</li></xsl:if>
+									<xsl:if test="decoded/response"><li class="res" title="Response">←</li></xsl:if>
+									<xsl:if test="decoded/exception"><li class="exc" title="Exception">×</li></xsl:if>
+								</ul>
+							</xsl:if>
+							<xsl:if test="decoded/request">
+								<ul class="bubbles semantics">
+									<xsl:if test="decoded/request/semantics/@seq = 1"><li class="seq" title="Sequential">SEQ</li></xsl:if>
+									<xsl:if test="decoded/request/semantics/@conc = 1"><li class="conc" title="Concurrent">CONC</li></xsl:if>
+									<xsl:if test="decoded/request/semantics/@mutex = 1"><li class="mutex" title="Mutex">MTX</li></xsl:if>
 								
-								<xsl:if test="decoded/request/semantics/@sync = 1"><li class="sync" title="Synchronous">SYNC</li></xsl:if>
-								<xsl:if test="decoded/request/semantics/@async = 1"><li class="async" title="Asynchronous">ASYNC</li></xsl:if>
+									<xsl:if test="decoded/request/semantics/@sync = 1"><li class="sync" title="Synchronous">SYNC</li></xsl:if>
+									<xsl:if test="decoded/request/semantics/@async = 1"><li class="async" title="Asynchronous">ASYNC</li></xsl:if>
 								
-								<xsl:if test="decoded/request/semantics/@construct = 1"><li class="construct" title="Constructor">CONSTRUCT</li></xsl:if>
-							</ul>
-						</xsl:if>
+									<xsl:if test="decoded/request/semantics/@construct = 1"><li class="construct" title="Constructor">CONSTRUCT</li></xsl:if>
+								</ul>
+							</xsl:if>
 						
-						<xsl:if test="decoded">
-							<code><xsl:value-of select="decoded//short" /></code>
-							<div class="details">
-								<!-- Highlighted code -->
-								<xsl:copy-of select="decoded//highlighted/*" />
+							<xsl:if test="decoded">
+								<code><xsl:value-of select="decoded//short" /></code>
+								<div class="details">
+									<!-- Highlighted code -->
+									<xsl:copy-of select="decoded//highlighted/*" />
 								
-								<!-- Encoded payload -->
-								<div class="payload"><xsl:copy-of select="func:format_stream(payload/text())"/></div>
+									<!-- Encoded payload -->
+									<div class="payload"><xsl:copy-of select="func:format_stream(payload/text())"/></div>
 								
-								<!-- Actors -->
-								<p class="actors">
-									<span>From:</span> <strong><xsl:value-of select="concat(from/@addr, ':', from/@port)"/></strong>
-									<span>To:</span> <strong><xsl:value-of select="concat(to/@addr, ':', to/@port)"/></strong>
-								</p>
-							</div>
-						</xsl:if>
+									<!-- Actors -->
+									<p class="actors">
+										<span>From:</span> <strong><xsl:value-of select="concat(from/@addr, ':', from/@port)"/></strong>
+										<span>To:</span> <strong><xsl:value-of select="concat(to/@addr, ':', to/@port)"/></strong>
+									</p>
+								</div>
+							</xsl:if>
+						</div>
 					</td>
 				</tr>
 			</xsl:for-each>

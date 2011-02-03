@@ -1,4 +1,6 @@
 """
+.. _pas-execute:
+
 ``pas execute``
 ===============
 

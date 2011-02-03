@@ -64,6 +64,11 @@
                     color: #555
                     background: url(../images/port.png) no-repeat
                     cursor: default
+            
+            &.this-only
+                font-weight: bold
+                color: black
+                background-color: rgba(200, 200, 0, .3)
 
     th, td
         padding: 0
@@ -136,7 +141,8 @@
     &.push-only .syn2,
     &.push-only .fin1,
     .hidden,
-    .bindstatus-hidden
+    .bindstatus-hidden,
+    .actor-only
         display: none !important
     
     .smart
@@ -157,12 +163,16 @@
                 &:after
                     content: "BindStatus"
                     display: inline-block
+                    overflow: hidden
                     padding: 0 4px
                     line-height: 15px
                     background: #b4e5a4
                     color: #396b33
                     font-size: 9px
                     text-shadow: 0 1px 0 #fff
+            .transaction[colspan="2"], .transaction[colspan="2"]
+                span:after
+                    content: "BS"
         
         &.syn1,
         &.fin2,

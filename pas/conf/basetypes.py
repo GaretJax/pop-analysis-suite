@@ -46,27 +46,25 @@ cls(20, 'AppCoreService', [
 ])
 
 cls(1001, 'POPCSearchNode', [
-    func(11, 'POPCSearchNode', [string, bool], []),                     # popc_search_node.ph:51
+    func(11, 'POPCSearchNode', [string, bool], []),     # popc_search_node.ph:51
     func(13, 'setJobMgrAccessPoint', [string], []),
     func(14, 'getJobMgrAccessPoint', [], [string]),
     func(15, 'setPOPCSearchNodeId', [string], []),
     func(16, 'getPOPCSearchNodeId', [], [string]),
     func(17, 'setOperatingSystem', [string], []),
+    func(18, 'getOperatingSystem', [], [string]),
     func(19, 'setPower', [float], []),
+    func(20, 'getPower', [], [float]),
     func(23, 'setMemorySize', [float], []),
+    func(24, 'getMemorySize', [], [int]),
     func(25, 'setNetworkBandwidth', [int], []),
+    func(26, 'getNetworkBandwidth', [], [int]),
     func(33, 'addNeighbor', [POPCSearchNode], [POPCSearchNode]), # Something is wrong here
     func(36, 'launchDiscovery', [Request, int], [array(POPCSearchNodeInfo)]),
     func(37, 'askResourcesDiscovery', [Request, string, string], []),
     func(38, 'callbackResult', [Response], []),
 ])
 
-cls(1500, 'TestClass', [
-    func(10, 'TestClass',               [],                                                 []),
-    func(12, 'get',                     [],                                                 [int]),
+cls(1114117, 'ParentProcess', [
+    func(0, 'callback', [], [int, string]),
 ])
-
-cls(1114117, 'WhatTheFuck', [
-    func(0, 'Constructor', [], [int, string]),
-])
-

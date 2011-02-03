@@ -1,0 +1,78 @@
+
+
+.file-browser
+
+    font-family: "Espresso Mono"
+
+    > ul
+        min-width: 230px
+        height: 100%
+        float: left
+        overflow: auto
+        background: #333
+        
+        > li
+            &.active > a
+                background: #383838
+                border-top-color: #343434
+                color: #eee
+                &:after
+                    content: " ⟶"
+                    text-align: right
+                    margin-right: -35px
+                    float: right
+        
+            > a
+                display: block
+                color: #bbb
+                text-decoration: none
+                padding: 5px 45px 8px 10px
+                font-size: 11px
+                border-bottom: 1px solid #444
+                border-top: 1px solid #2e2e2e
+        
+                &:hover
+                    background: #383838
+                    border-top-color: #343434
+                    color: #ddd
+        
+            &:first-child > a
+                border-top: 1px solid transparent
+                margin-top: 1px
+            
+            &:last-child
+                border-bottom: 1px solid #2e2e2e
+    
+    > section
+        display: none
+        height: 100%
+        overflow: auto
+        
+        > table
+            width: 100%
+            height: 100%
+            background: #f4f4f4
+            line-height: 1.4em
+            
+            td
+                vertical-align: top
+            
+            td.linenos
+                padding: 1em
+                width: 2em
+                text-align: right
+                background: #ddd
+                border-left: 1px solid #000
+                border-right: 1px solid #ccc
+                
+                .linenodiv
+                    color: #555
+            
+            td.code
+                padding: 1em
+                -webkit-user-select: text
+                cursor: text
+    
+        &.active
+            display: block
+                

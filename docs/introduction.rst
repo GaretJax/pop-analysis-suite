@@ -17,7 +17,6 @@ remote machine as soon as an ssh access is available and the required
 dependencies installed.
 
 .. todo::
-   
    Add a section about usage without VMs.
 
 Further information about the POP-C++ project and the POP model can be found on
@@ -27,6 +26,13 @@ the `project's homepage <http://gridgroup.hefr.ch/popc/>`_.
 Requirements
 ------------
 
+.. todo::
+   Move the requirements and the installation subsections in a section on their
+   own inside the documentation part.
+   
+.. todo::
+   Add some simple instructions about setuptools and vagrant installation
+
 The requirements necessary to install and run the ``pas`` utility are the
 following:
 
@@ -35,10 +41,6 @@ following:
  * ``vagrant`` and VirtualBox to run the virtual machines
    – http://vagrantup.com/;
  * A webkit based browser (Safari, Google Chrome,...) to display the reports.
-
-.. todo::
-   
-   Backport to Python 2.6
 
 The following libraries and utilities are optional but add some additional
 features:
@@ -80,6 +82,8 @@ You should obtain an incorrect usage error similar to the following::
               {authorize,execute,jobmgr,compile,init,measure} ...
    pas: error: too few arguments
 
+.. todo::
+   Add note about sudo + package removal
 
 Install from source
 ~~~~~~~~~~~~~~~~~~~
@@ -113,10 +117,6 @@ https://github.com/GaretJax/pop-analysis-suite/
 Further development/contribution directives will be added as soon as some
 interest is manifested by any hacker willing to participate in the development
 process.
-
-.. todo::
-
-   Add a section about running tests... and maybe implement the tests too.
 
 
 Structure of this manual

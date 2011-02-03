@@ -1,5 +1,6 @@
 import sys
 import os
+import imp
 
 from pas.parser import errors
 
@@ -44,9 +45,7 @@ class TypesRegistry(object):
         path, module_file = os.path.split(module_path)
         module_name = module_file.rsplit('.', 1)[0]
         
-        sys.path.insert(0, path)
         current_registry = self
-        __import__(module_name)
+        imp.load_source(module_name, module_path)
         current_registry = None
-        sys.path.remove(path)
 

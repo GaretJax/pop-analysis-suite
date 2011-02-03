@@ -1,35 +1,46 @@
-SRCS=simple.ph simple.cc main.cc
-EXEC=simple
+include $(ENV_BASE)/conf/Makefile.base
 
-ARCH=$$(uname -m)-$$(uname -p)-$$(uname -s)
-
-all: bin object cleantemp
-
-$(ARCH):
-	mkdir $(ARCH)
-
-dir:
-	mkdir -p $(ARCH)
-
-bin: dir
-	popcc -noclean -o $(EXEC) $(SRCS)
-	mv $(EXEC) $(ARCH)
-
-object: dir
-	popcc -noclean -object -o $(EXEC).obj $(SRCS)
-	mv $(EXEC).obj $(ARCH)
-	./$(ARCH)/$(EXEC).obj -listlong >>obj.map
-	sort -u obj.map >obj.map.temp
-	mv obj.map.temp obj.map
-
-cleantemp:
-	rm -f _paroc* *.o
-	
-clean: cleantemp
-	rm -rf _paroc* *.o $(ARCH)
-
-cleanall: clean
-	rm -rf *.obj obj.map
+MEASURE_NAME=$(EXEC)
 
 run:
-	popcrun obj.map ./$(ARCH)/$(EXEC)
+	$(call header,Running measure)
+
+	@echo "\n 1. Starting measures and services"
+	@pas measure start $(MEASURE_NAME) $(INDENT)
+	@pas jobmgr start $(INDENT)
+	@echo "    OK."
+
+	@echo "\n 2. Running test case"
+	@pas execute $(EXEC) $(INDENT)
+	@echo "    OK."
+
+	@echo "\n 3. Stopping measures and services"
+	@pas jobmgr stop $(INDENT)
+	@pas measure stop $(MEASURE_NAME) $(INDENT)
+	@echo "    OK."
+
+	@echo "\n 4. Collecting results"
+	@pas measure collect $(MEASURE_NAME) $(INDENT)
+	@echo "    OK."
+
+	$(call done)
+
+
+report:
+	$(call header,Reporting measure)
+	
+	@echo "\n 1. Converting measures to xml"
+	@pas report toxml $(MEASURE_NAME) $(INDENT)
+	@echo "    OK."
+	
+	@echo "\n 2. Simplifying measures"
+	@pas report simplify $(MEASURE_NAME) $(INDENT)
+	@echo "    OK."
+
+	@echo "\n 3. Decoding measures"
+	@pas report decode $(MEASURE_NAME) $(INDENT)
+	@echo "    OK."
+
+	@echo "\n 4. Generating report"
+	@pas report report $(MEASURE_NAME) $(INDENT)
+	@echo "    OK."

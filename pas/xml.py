@@ -13,12 +13,16 @@ class Transformation(object):
             self.document = etree.parse(fh)
         
         self.extensions = {}
+        self.parameters = {}
     
     def register_function(self, namespace, func, name=None):
         if not name:
             name = func.__name__
         
         self.extensions[(namespace, name)] = func
+    
+    def register_element(self, namespace, name, element):
+        self.extensions[(namespace, name)] = element
     
     def transform(self, document_or_path, destination=None):
         if isinstance(document_or_path, basestring):
@@ -31,7 +35,7 @@ class Transformation(object):
                 document = document_or_path
         
         transformation = etree.XSLT(self.document, extensions=self.extensions)
-        transformed = transformation(document)
+        transformed = transformation(document, **self.parameters)
         
         if destination:
             with open(destination, 'w') as fh:

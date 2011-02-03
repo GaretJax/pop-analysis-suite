@@ -1,6 +1,6 @@
 Vagrant::Config.run do |config|
 
-  config.vm.box = "lucid32"
+  config.vm.box = "lucid32_test"
   config.vm.box_url = "http://files.vagrantup.com/lucid32.box"
 
   config.vm.share_folder("test-cases", "/share/test-cases", "./cases")
@@ -8,7 +8,7 @@ Vagrant::Config.run do |config|
   config.vm.share_folder("reports", "/share/measures", "./reports")
   config.vm.share_folder("conf", "/share/conf", "./conf")
   
-  config.vm.define :master do |master_config|
+  config.vm.define :master1 do |master_config|
     master_config.vm.network "33.33.33.10"
     
     master_config.vm.provision :chef_solo do |chef|
@@ -24,10 +24,10 @@ Vagrant::Config.run do |config|
     end
   end
   
-  config.vm.define :slave1 do |slave_config|
-    slave_config.vm.network "33.33.33.11"
+  config.vm.define :slave1 do |slave1_config|
+    slave1_config.vm.network "33.33.33.11"
   
-    slave_config.vm.provision :chef_solo do |chef|
+    slave1_config.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = "conf/chef/cookbooks"
       chef.roles_path = "conf/chef/roles"
       chef.add_role "slave"

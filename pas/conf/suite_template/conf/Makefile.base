@@ -1,0 +1,58 @@
+.PHONY: execute clean cleanall
+
+SRCS=src/*.ph src/*.cc
+
+EXEC=$(notdir $(abspath .))
+
+ARCH=$$(uname -m)-$$(uname -p)-$$(uname -s)
+
+INDENT= 2>&1 | sed 's/^/    /g'
+
+header = \
+		@echo "" ; \
+		echo "$(1)" ; \
+		echo "================================================================================"
+
+done = @echo "\n Done."
+
+build: bin object
+
+dir:
+	mkdir -p build/$(ARCH)
+
+bin: dir
+	popcc -o $(EXEC) $(SRCS)
+	mv $(EXEC) build/$(ARCH)
+
+object: dir
+	popcc -object -o $(EXEC).obj $(SRCS)
+	mv $(EXEC).obj build/$(ARCH)
+	build/$(ARCH)/$(EXEC).obj -listlong >>build/obj.map
+	sort -u build/obj.map >build/obj.map.temp
+	mv build/obj.map.temp build/obj.map
+
+clean:
+	rm -rf *.o build/$(ARCH)
+
+cleanall: clean
+	rm -rf build
+
+execute:
+	popcrun build/obj.map ./build/$(ARCH)/$(EXEC)
+
+reset:
+	$(call header,Resetting measuring environment)
+	
+	@echo "\n 1. Killing all job managers"
+	@pas jobmgr kill $(INDENT)
+	@echo "    OK."
+	
+	@echo "\n 2. Killing all measures"
+	@pas measure kill $(INDENT)
+	@echo "    OK."
+	
+	@echo "\n 3. Recompiling binaries"
+	@pas compile $(EXEC) $(INDENT)
+	@echo "    OK."
+	
+	$(call done)

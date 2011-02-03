@@ -18,49 +18,90 @@
 
 	<xsl:key name="ip" match="//field[@name='ip.src' or @name='ip.dst']" use="@value"/>
 	
+	<xsl:variable name="address" select="//field[@name='ip.src' or @name='ip.dst']/@show[1]"/>
+	
 	<xsl:template match="/">
 		<measure>
 			<actors>
-				<xsl:variable name="addresses" select="//field[@name='ip.src' or @name='ip.dst']"/>
-
-				<xsl:for-each select="$addresses[generate-id() = generate-id(key('ip', @value)[1])]">
-					<node>
-						<xsl:variable name="ip" select="@value"/>
-						
-						<xsl:attribute name="addr">
-							<xsl:value-of select="@show" />
-						</xsl:attribute>
-
-						<xsl:variable name="from"
-							select="//packet[proto[@name='ip']/field[@name='ip.src']/@value=$ip]"/>
-						
-						<xsl:variable name="to"
-							select="//packet[proto[@name='ip']/field[@name='ip.dst']/@value=$ip]"/>
-
-						<xsl:variable name="ports">
-							<xsl:for-each select="$from/proto[@name='tcp']/field[@name='tcp.srcport']|$to/proto[@name='tcp']/field[@name='tcp.dstport']">
-								<port>
-									<xsl:value-of select="@show" />
-								</port>
-							</xsl:for-each>
-						</xsl:variable>
-						
-						<xsl:for-each select="set:distinct(exsl:node-set($ports)/port)">
-							<xsl:sort data-type="number" />
-							<port>
-								<xsl:attribute name="port">
-									<xsl:value-of select="." />
-								</xsl:attribute>
-							</port>
-						</xsl:for-each>
-					</node>
-				</xsl:for-each>
+				<xsl:choose>
+					<xsl:when test="$loopback">
+						<xsl:call-template name="loopback-actor" />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="multiple-actors" />
+					</xsl:otherwise>
+				</xsl:choose>
 			</actors>
 
 			<transactions>
 				<xsl:apply-templates/>
 			</transactions>
 		</measure>
+	</xsl:template>
+	
+	<xsl:template name="loopback-actor">
+		<node>
+			<xsl:attribute name="addr">
+				<xsl:value-of select="$address" />
+			</xsl:attribute>
+			
+			<xsl:variable name="ports">
+				<xsl:for-each select="//proto[@name='tcp']/field[@name='tcp.srcport' or @name='tcp.dstport']">
+					<port>
+						<xsl:value-of select="@show" />
+					</port>
+				</xsl:for-each>
+			</xsl:variable>
+		
+			<xsl:call-template name="ports">
+				<xsl:with-param name="ports" select="$ports"/>
+			</xsl:call-template>
+		</node>
+	</xsl:template>
+	
+	<xsl:template name="multiple-actors">
+		<xsl:variable name="addresses" select="//field[@name='ip.src' or @name='ip.dst']"/>
+
+		<xsl:for-each select="$addresses[generate-id() = generate-id(key('ip', @value)[1])]">
+			<node>
+				<xsl:variable name="ip" select="@value"/>
+				
+				<xsl:attribute name="addr">
+					<xsl:value-of select="@show" />
+				</xsl:attribute>
+
+				<xsl:variable name="from"
+					select="//packet[proto[@name='ip']/field[@name='ip.src']/@value=$ip]"/>
+				
+				<xsl:variable name="to"
+					select="//packet[proto[@name='ip']/field[@name='ip.dst']/@value=$ip]"/>
+
+				<xsl:variable name="ports">
+					<xsl:for-each select="$from/proto[@name='tcp']/field[@name='tcp.srcport']|$to/proto[@name='tcp']/field[@name='tcp.dstport']">
+						<port>
+							<xsl:value-of select="@show" />
+						</port>
+					</xsl:for-each>
+				</xsl:variable>
+				
+				<xsl:call-template name="ports">
+					<xsl:with-param name="ports" select="$ports"/>
+				</xsl:call-template>
+			</node>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="ports">
+		<xsl:param name="ports"/>
+		
+		<xsl:for-each select="set:distinct(exsl:node-set($ports)/port)">
+			<xsl:sort data-type="number" />
+			<port>
+				<xsl:attribute name="port">
+					<xsl:value-of select="." />
+				</xsl:attribute>
+			</port>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="/pdml/packet">
@@ -92,8 +133,14 @@
 
 			<from>
 				<xsl:attribute name="addr">
-					<xsl:value-of select="proto[@name='ip']/field[@name='ip.src']/@show"
-					/>
+					<xsl:choose>
+						<xsl:when test="$loopback">
+							<xsl:value-of select="$address" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="proto[@name='ip']/field[@name='ip.src']/@show" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:attribute>
 				<xsl:attribute name="port">
 					<xsl:value-of
@@ -102,8 +149,14 @@
 			</from>
 			<to>
 				<xsl:attribute name="addr">
-					<xsl:value-of select="proto[@name='ip']/field[@name='ip.dst']/@show"
-					/>
+					<xsl:choose>
+						<xsl:when test="$loopback">
+							<xsl:value-of select="$address" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="proto[@name='ip']/field[@name='ip.dst']/@show" />
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:attribute>
 				<xsl:attribute name="port">
 					<xsl:value-of

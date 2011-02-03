@@ -7,3 +7,4 @@ Usage documentation
    execution-model
    measure-cases
    configuration
+   report

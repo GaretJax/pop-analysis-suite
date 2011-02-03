@@ -12,6 +12,7 @@ execute "get-popc-source" do
   command <<-EOH
   rm -rf /tmp/popc
   cp -R #{path}/#{version} /tmp/popc
+  chmod +x /tmp/popc/configure
   EOH
 end
 

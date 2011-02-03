@@ -6,6 +6,11 @@ Glossary
 
 .. glossary::
    :sorted:
+   
+   composer
+   composers
+      A function which allows to create complex or composite types using the
+      :ref:`ppd-reference` syntax.
 
    measure case
    measure cases

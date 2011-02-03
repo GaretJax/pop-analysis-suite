@@ -22,6 +22,9 @@ def start():
     nodes of a system, use the startall function, which introduces some delays
     to allow a correct registration of the slaves by the master.
     """
+    # Cleanup previsouly created log files
+    shell.remote('rm -f {0}'.format(" ".join(settings.LOG_FILES)), sudo=True)
+    
     # pty required to be set to true, otherwise the remote invocation hangs
     # and never returns
     shell.remote('SXXpopc start', pty=True, sudo=True)

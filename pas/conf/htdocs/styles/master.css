@@ -408,18 +408,109 @@ body > nav ul:first-child a {
   padding: 0 22px;
 }
 /* line 56, ../sass/_navigation.sass */
-body > nav ul:nth-child(2) {
+body > nav > ul:nth-child(2) {
   margin: 4px 20px;
   text-shadow: 0 1px 0 white;
 }
 /* line 60, ../sass/_navigation.sass */
-body > nav ul:nth-child(2) > li {
+body > nav > ul:nth-child(2) > li {
   padding: 5px 0;
   line-height: 19px;
   display: none;
 }
 /* line 65, ../sass/_navigation.sass */
-body > nav ul:nth-child(2) > li.frame-filter-bar {
+body > nav > ul:nth-child(2) > li.active {
+  display: block;
+}
+
+/* line 3, ../sass/_code.sass */
+.file-browser {
+  font-family: "Espresso Mono";
+}
+/* line 7, ../sass/_code.sass */
+.file-browser > ul {
+  min-width: 230px;
+  height: 100%;
+  float: left;
+  overflow: auto;
+  background: #333333;
+}
+/* line 15, ../sass/_code.sass */
+.file-browser > ul > li.active > a {
+  background: #383838;
+  border-top-color: #343434;
+  color: #eeeeee;
+}
+/* line 19, ../sass/_code.sass */
+.file-browser > ul > li.active > a:after {
+  content: " ⟶";
+  text-align: right;
+  margin-right: -35px;
+  float: right;
+}
+/* line 25, ../sass/_code.sass */
+.file-browser > ul > li > a {
+  display: block;
+  color: #bbbbbb;
+  text-decoration: none;
+  padding: 5px 45px 8px 10px;
+  font-size: 11px;
+  border-bottom: 1px solid #444444;
+  border-top: 1px solid #2e2e2e;
+}
+/* line 34, ../sass/_code.sass */
+.file-browser > ul > li > a:hover {
+  background: #383838;
+  border-top-color: #343434;
+  color: #dddddd;
+}
+/* line 39, ../sass/_code.sass */
+.file-browser > ul > li:first-child > a {
+  border-top: 1px solid transparent;
+  margin-top: 1px;
+}
+/* line 43, ../sass/_code.sass */
+.file-browser > ul > li:last-child {
+  border-bottom: 1px solid #2e2e2e;
+}
+/* line 46, ../sass/_code.sass */
+.file-browser > section {
+  display: none;
+  height: 100%;
+  overflow: auto;
+}
+/* line 51, ../sass/_code.sass */
+.file-browser > section > table {
+  width: 100%;
+  height: 100%;
+  background: #f4f4f4;
+  line-height: 1.4em;
+}
+/* line 57, ../sass/_code.sass */
+.file-browser > section > table td {
+  vertical-align: top;
+}
+/* line 60, ../sass/_code.sass */
+.file-browser > section > table td.linenos {
+  padding: 1em;
+  width: 2em;
+  text-align: right;
+  background: #dddddd;
+  border-left: 1px solid black;
+  border-right: 1px solid #cccccc;
+}
+/* line 68, ../sass/_code.sass */
+.file-browser > section > table td.linenos .linenodiv {
+  color: #555555;
+}
+/* line 71, ../sass/_code.sass */
+.file-browser > section > table td.code {
+  padding: 1em;
+  -webkit-user-select: text;
+  cursor: text;
+}
+/* line 76, ../sass/_code.sass */
+.file-browser > section.active {
   display: block;
 }
 
@@ -502,16 +593,28 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   box-shadow: #136400 0px 1px 0px 0;
 }
 
-/* line 3, ../sass/transactions/_details.sass */
+/* line 2, ../sass/transactions/_details.sass */
+.transactions > tbody > tr > td:last-child {
+  whitespace: nowrap;
+}
+/* line 5, ../sass/transactions/_details.sass */
+.transactions > tbody > tr > td:last-child > div {
+  white-space: nowrap;
+}
+/* line 8, ../sass/transactions/_details.sass */
+.transactions > tbody > tr > td:last-child > div > code {
+  white-space: nowrap;
+}
+/* line 11, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child code {
   padding-left: 10px;
   color: #888888;
 }
-/* line 7, ../sass/transactions/_details.sass */
+/* line 15, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .details {
   display: none;
 }
-/* line 10, ../sass/transactions/_details.sass */
+/* line 18, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .codehilite, .transactions > tbody > tr > td:last-child .payload {
   cursor: auto;
   -webkit-user-select: text;
@@ -522,7 +625,7 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   padding: 8px 7px 8px 10px;
   line-height: 1.3em;
 }
-/* line 20, ../sass/transactions/_details.sass */
+/* line 28, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .codehilite:before, .transactions > tbody > tr > td:last-child .payload:before {
   -webkit-user-select: none;
   float: right;
@@ -534,71 +637,71 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   text-transform: uppercase;
   content: "Decoded frame";
 }
-/* line 31, ../sass/transactions/_details.sass */
+/* line 39, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .payload {
   color: #555555;
   line-height: 1.5em;
 }
-/* line 35, ../sass/transactions/_details.sass */
+/* line 43, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .payload span {
   padding-bottom: 10px;
   display: block;
 }
-/* line 39, ../sass/transactions/_details.sass */
+/* line 47, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .payload span:last-child {
   display: inline;
 }
-/* line 42, ../sass/transactions/_details.sass */
+/* line 50, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .payload:before {
   content: "Original payload";
 }
-/* line 45, ../sass/transactions/_details.sass */
+/* line 53, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .actors {
   margin-top: 8px;
 }
-/* line 48, ../sass/transactions/_details.sass */
+/* line 56, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .actors span {
   color: #777777;
   text-transform: uppercase;
   font-size: 0.8em;
 }
-/* line 53, ../sass/transactions/_details.sass */
+/* line 61, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .actors span:nth-child(3):before {
   font-family: "Lucida Grande";
   font-size: 1.2em;
   color: #cccccc;
   content: "\2003→\2003 \2003";
 }
-/* line 59, ../sass/transactions/_details.sass */
+/* line 67, ../sass/transactions/_details.sass */
 .transactions > tbody > tr > td:last-child .actors strong {
   cursor: auto;
   -webkit-user-select: text;
   padding: 0 10px 0 5px;
 }
 
-/* line 65, ../sass/transactions/_details.sass */
+/* line 73, ../sass/transactions/_details.sass */
 .transactions > tbody > tr.details th, .transactions > tbody > tr.details td {
   background: 0 !important;
 }
-/* line 68, ../sass/transactions/_details.sass */
+/* line 76, ../sass/transactions/_details.sass */
 .transactions > tbody > tr.details + tr th, .transactions > tbody > tr.details + tr td, .transactions > tbody > tr.details th, .transactions > tbody > tr.details td {
   border-top-color: #aaaaaa !important;
 }
 
-/* line 71, ../sass/transactions/_details.sass */
+/* line 79, ../sass/transactions/_details.sass */
 .transactions > tbody > tr.details > td:last-child {
   background: 0 !important;
 }
-/* line 74, ../sass/transactions/_details.sass */
+/* line 82, ../sass/transactions/_details.sass */
 .transactions > tbody > tr.details > td:last-child .details {
   display: block;
 }
 
-/* line 78, ../sass/transactions/_details.sass */
+/* line 86, ../sass/transactions/_details.sass */
 .transactions > tbody > tr:hover > td:last-child code {
   color: #444444;
 }
-/* line 81, ../sass/transactions/_details.sass */
+/* line 89, ../sass/transactions/_details.sass */
 .transactions > tbody > tr:hover > td:last-child code:after {
   content: " \2003 — \2003 Show details";
   text-shadow: 0 1px 0 white;
@@ -607,7 +710,7 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   font-family: "Lucida Grande";
 }
 
-/* line 89, ../sass/transactions/_details.sass */
+/* line 97, ../sass/transactions/_details.sass */
 .transactions > tbody > tr.details:hover > td:last-child code:after {
   content: " \2003 — \2003 Hide details";
 }
@@ -687,20 +790,26 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   cursor: default;
 }
 /* line 68, ../sass/transactions/_transactions.sass */
+.transactions thead th:not(:first-child).this-only {
+  font-weight: bold;
+  color: black;
+  background-color: rgba(200, 200, 0, 0.3);
+}
+/* line 73, ../sass/transactions/_transactions.sass */
 .transactions th, .transactions td {
   padding: 0;
 }
-/* line 74, ../sass/transactions/_transactions.sass */
+/* line 79, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr.placeholder > td {
   width: 25px;
   border-right: 1px solid #999999;
   padding: 0;
 }
-/* line 79, ../sass/transactions/_transactions.sass */
+/* line 84, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr.placeholder > td:last-child {
   border-right: 0;
 }
-/* line 82, ../sass/transactions/_transactions.sass */
+/* line 87, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr.placeholder > td span {
   margin: 0;
   padding: 0;
@@ -708,32 +817,32 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   width: 25px;
   display: block;
 }
-/* line 91, ../sass/transactions/_transactions.sass */
+/* line 96, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr:not(.placeholder):hover > td, .transactions > tbody > tr:not(.placeholder):hover > th:first-child {
   background: rgba(200, 200, 200, 0.3);
 }
-/* line 94, ../sass/transactions/_transactions.sass */
+/* line 99, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr:not(.placeholder) > td, .transactions > tbody > tr:not(.placeholder) > th {
   vertical-align: middle;
   border-top: 1px solid #cccccc;
 }
-/* line 98, ../sass/transactions/_transactions.sass */
+/* line 103, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr:not(.placeholder) > td:not(.before):not(.after):not(:last-child), .transactions > tbody > tr:not(.placeholder) > th:not(.before):not(.after):not(:last-child) {
   padding: 5px 12px 5px 13px;
 }
-/* line 101, ../sass/transactions/_transactions.sass */
+/* line 106, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr:not(.placeholder) > th {
   vertical-align: middle;
   border-right: 1px solid #999999;
   padding-top: 8px !important;
 }
-/* line 106, ../sass/transactions/_transactions.sass */
+/* line 111, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr:not(.placeholder) > th span {
   display: block;
   width: 30px;
   text-align: right;
 }
-/* line 111, ../sass/transactions/_transactions.sass */
+/* line 116, ../sass/transactions/_transactions.sass */
 .transactions > tbody > tr:not(.placeholder) > td:last-child {
   border-left: 1px solid #999999;
   cursor: default;
@@ -742,29 +851,30 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   padding: 8px 7px;
   font-family: "Espresso Mono";
 }
-/* line 119, ../sass/transactions/_transactions.sass */
+/* line 124, ../sass/transactions/_transactions.sass */
 .transactions .transaction span {
   display: block;
   background-repeat: repeat-x, no-repeat;
   height: 5px;
   margin: 8px 0;
 }
-/* line 125, ../sass/transactions/_transactions.sass */
+/* line 130, ../sass/transactions/_transactions.sass */
 .transactions .rtl .transaction span {
   background-image: url(../images/flow-line.png), url(../images/flow-left.png);
 }
-/* line 128, ../sass/transactions/_transactions.sass */
+/* line 133, ../sass/transactions/_transactions.sass */
 .transactions .ltr .transaction span {
   background-image: url(../images/flow-line.png), url(../images/flow-right.png);
   background-position: center right;
 }
-/* line 135, ../sass/transactions/_transactions.sass */
+/* line 140, ../sass/transactions/_transactions.sass */
 .transactions.no-ack .ack-only, .transactions.push-only .syn2, .transactions.push-only .fin1,
 .transactions .hidden,
-.transactions .bindstatus-hidden {
+.transactions .bindstatus-hidden,
+.transactions .actor-only {
   display: none !important;
 }
-/* line 144, ../sass/transactions/_transactions.sass */
+/* line 150, ../sass/transactions/_transactions.sass */
 .transactions .smart.bindstatus-request .transaction span {
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -784,10 +894,11 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   height: 15px;
   text-align: center;
 }
-/* line 157, ../sass/transactions/_transactions.sass */
+/* line 163, ../sass/transactions/_transactions.sass */
 .transactions .smart.bindstatus-request .transaction span:after {
   content: "BindStatus";
   display: inline-block;
+  overflow: hidden;
   padding: 0 4px;
   line-height: 15px;
   background: #b4e5a4;
@@ -795,11 +906,15 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   font-size: 9px;
   text-shadow: 0 1px 0 white;
 }
-/* line 167, ../sass/transactions/_transactions.sass */
+/* line 174, ../sass/transactions/_transactions.sass */
+.transactions .smart.bindstatus-request .transaction[colspan="2"] span:after, .transactions .smart.bindstatus-request .transaction[colspan="2"] span:after {
+  content: "BS";
+}
+/* line 177, ../sass/transactions/_transactions.sass */
 .transactions .smart.syn1, .transactions .smart.fin2, .transactions .smart.bindstatus-response {
   display: none;
 }
-/* line 173, ../sass/transactions/_transactions.sass */
+/* line 183, ../sass/transactions/_transactions.sass */
 .transactions .smart.syn2 .transaction span, .transactions .smart.fin1 .transaction span {
   opacity: 1;
   margin: 6px 0 5px 0;
@@ -808,19 +923,19 @@ body > nav ul:nth-child(2) > li.frame-filter-bar {
   background-repeat: no-repeat, no-repeat, repeat-x;
   background-position: 0 0, 100% 0, 0 0;
 }
-/* line 183, ../sass/transactions/_transactions.sass */
+/* line 193, ../sass/transactions/_transactions.sass */
 .transactions .smart.syn2.rtl .transaction span {
   background-image: url(../images/syn-start.png), url(../images/syn-end.png), url(../images/syn-ltr.png);
 }
-/* line 186, ../sass/transactions/_transactions.sass */
+/* line 196, ../sass/transactions/_transactions.sass */
 .transactions .smart.syn2.ltr .transaction span {
   background-image: url(../images/syn-start.png), url(../images/syn-end.png), url(../images/syn-rtl.png);
 }
-/* line 189, ../sass/transactions/_transactions.sass */
+/* line 199, ../sass/transactions/_transactions.sass */
 .transactions .smart.fin1.rtl .transaction span {
   background-image: url(../images/fin-start.png), url(../images/fin-end.png), url(../images/fin-rtl.png);
 }
-/* line 192, ../sass/transactions/_transactions.sass */
+/* line 202, ../sass/transactions/_transactions.sass */
 .transactions .smart.fin1.ltr .transaction span {
   background-image: url(../images/fin-start.png), url(../images/fin-end.png), url(../images/fin-ltr.png);
 }

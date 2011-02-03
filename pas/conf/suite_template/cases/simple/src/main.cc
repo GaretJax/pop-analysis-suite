@@ -1,6 +1,6 @@
 #include "simple.ph"
 
-#define OBJCOUNT 10
+#define OBJCOUNT 2
 
 int main(int argc, char** argv) {
     

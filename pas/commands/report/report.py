@@ -19,6 +19,9 @@ decoded measure named ``MEASURE``.
    Assemble all resources (not only one measure file) in the final report.
    Include things such as popc logs, different measures, highlighted source
    code,...
+   
+.. todo::
+   Check syntax of all commands as they changed slightly
 """
 
 
@@ -34,13 +37,15 @@ from pas import measure
 
 def getparser(parser):
     commands.measure_argument(parser)
+    commands.case_argument(parser)
 
 
 @commands.select_measure
+@commands.select_case
 def command(options):
     """
     Generates an HTML report for the already collected, converted, simplified
     and decoded measure named MEASURE.
     """
-    measure.report(options.measure[1])
+    measure.report(options.measure[1], options.case[0])
 

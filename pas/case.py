@@ -40,7 +40,8 @@ def select(name=None, basedir=None):
     """
 
     if not basedir:
-        basedir = settings.PATHS['test-cases'][0]
+        basedir = os.path.join(settings.ENV_BASE,
+                               settings.PATHS['test-cases'][0])
 
     # Get all files in the directory
     paths = os.listdir(basedir)
@@ -118,12 +119,14 @@ def compile(name, localdir=None, remotedir=None):
     local = os.path.join(localdir, name)
     remote = os.path.join(remotedir, name)
 
-    with shell.ignore_warnings():
-        shell.local('rm {0}/build/obj.map'.format(local))
+    shell.local('rm -f {0}/build/obj.map'.format(local))
+
+    base = os.path.dirname(settings.PATHS['configuration'][1])
 
     with shell.workon(all_hosts()):
         with shell.cd(remote):
-            shell.remote('make clean && make')
+            shell.remote('ENV_BASE={0} make -e clean'.format(base))
+            shell.remote('ENV_BASE={0} make -e build'.format(base))
 
 
 def execute(name, remotedir=None):
@@ -135,8 +138,10 @@ def execute(name, remotedir=None):
 
     remote = os.path.join(remotedir, name)
 
+    base = os.path.dirname(settings.PATHS['configuration'][1])
+
     with shell.workon(role('client')):
         with shell.cd(remote):
-            shell.remote('make execute', pty=True)
+            shell.remote('ENV_BASE={0} make -e execute'.format(base))
 
 

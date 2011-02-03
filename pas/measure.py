@@ -166,8 +166,15 @@ def collect(name, overwrite=False):
 
     shell.remote('chown -R {0}:{0} {1}'.format(settings.VM_USER, guest_local),
                  sudo=True)
-    shell.remote('mkdir -p "{0}"'.format(destination))
+    shell.remote('mkdir -p "{0}/logs"'.format(destination))
     shell.remote('cp {0}/* "{1}"'.format(guest_local, destination))
+    
+    # Copy log files
+    for logfile in settings.LOG_FILES:
+        shell.remote('chown {0}:{0} "{1}" || true'.format(settings.VM_USER,
+                     logfile), sudo=True)
+        shell.remote('cp "{0}" "{1}/logs" || true'.format(logfile,
+                     destination))
 
 
 def toxml(name):
@@ -204,15 +211,18 @@ def simplify(name, prettyprint=True):
     simplifier = xml.Transformation(stylesheet('simplify.xsl'))
 
     for source in glob.glob(pattern):
-        if not source.endswith('.simple.xml'):
+        if len(os.path.basename(source).split('.')) == 3:
             dest = source.replace('.xml', '.simple.xml')
+            
+            simplifier.parameters['loopback'] = str(int(source.endswith(
+                                                        '.lo.xml')))
             simplifier.transform(source, dest)
 
             if prettyprint:
                 xml.prettyprint(dest)
 
 
-def decode(name, prettyprint=False):
+def decode(name, measure_case, prettyprint=False):
     """
     Decodes the simplified XML representation of the given measure by adding
     a "decoded" element to each packet containing a payload.
@@ -221,8 +231,16 @@ def decode(name, prettyprint=False):
     python extension function which provides the "decoded" element given a
     payload text string.
     """
+    host_shared = settings.PATHS['shared-measures'][0]
+    types = os.path.join(measure_case, "types.py")
+    
     types_registry = registry.TypesRegistry()
     types_registry.load('pas.conf.basetypes')
+    
+    try:
+        types_registry.parse(types)
+    except IOError:
+        pass
 
     proto = protocol.MappingProtocol(types_registry)
 
@@ -261,6 +279,13 @@ def decode(name, prettyprint=False):
             print binascii.b2a_hex(stream.get_buffer())
             print "-" * 80
             return
+        except errors.UnknownMethod as e:
+            print "-" * 80
+            print context.context_node.attrib['timestamp'],
+            print "Error while decoding packet:", e
+            print binascii.b2a_hex(stream.get_buffer())
+            print "-" * 80
+            return
         except xdrlib.Error as e:
             print "-" * 80
             print context.context_node.attrib['timestamp'], e
@@ -283,7 +308,6 @@ def decode(name, prettyprint=False):
                             _decode, 'decode')
 
     # Apply transformation to all simplified xml files
-    host_shared = settings.PATHS['shared-measures'][0]
     pattern = os.path.join(host_shared, name, "*", "*.simple.xml")
 
     for source in glob.glob(pattern):
@@ -294,14 +318,55 @@ def decode(name, prettyprint=False):
             xml.prettyprint(dest)
 
 
-def report(name):
+def report(name, measure_case):
     """
     Assembles all the acquired resources (such as source code, measures and
     log files) and generates an html page suitable for human interaction and
     analysis.
     """
+    host_shared = settings.PATHS['shared-measures'][0]
     
     trans = xml.Transformation(stylesheet('report.xsl'))
+    
+    def sources(_):
+        els = etree.Element('files')
+        
+        base = len(measure_case)+1
+        
+        for root, dirs, files in os.walk(measure_case):
+            print root
+            
+            for f in files:
+                if f.endswith(('.pyc', '.DS_Store', '.o')):
+                    continue
+                    
+                path = os.path.join(root, f)
+                name = path[base:]
+                
+                if name.startswith('build/'):
+                    continue
+                
+                element = etree.SubElement(els, 'file')
+                element.attrib['path'] = path
+                element.attrib['name'] = name
+    
+        return els
+    
+    trans.register_function('http://gridgroup.eia-fr.ch/popc', sources)
+    
+    def logs(_):
+        els = etree.Element('files')
+        basel = len(os.path.join(settings.ENV_BASE, host_shared, name))
+        base = os.path.join(settings.ENV_BASE, host_shared, name, '*.*.*.*', 'logs', '*')
+        
+        for log in glob.glob(base):
+            element = etree.SubElement(els, 'file')
+            element.attrib['path'] = log
+            element.attrib['name'] = log[basel+1:]
+    
+        return els
+    
+    trans.register_function('http://gridgroup.eia-fr.ch/popc', logs)
     
     def format_stream(_, payload):
         """
@@ -328,16 +393,60 @@ def report(name):
     
     trans.register_function('http://gridgroup.eia-fr.ch/popc', format_stream)
     
-    host_shared = settings.PATHS['shared-measures'][0]
+    
+    class Highlighter(etree.XSLTExtension):
+        def execute(self, context, self_node, input_node, output_parent):
+            from pygments import highlight
+            from pygments import lexers
+            from pygments.formatters import HtmlFormatter
+            
+            # Highlight source text with pygments
+            source = input_node.attrib['path']
+            
+            with open(source) as fh:
+                code = fh.read()
+            
+            # Chose a lexer
+            name = os.path.split(source)[1]
+            
+            if name == 'Makefile':
+                lexer = lexers.BaseMakefileLexer()
+            elif name.endswith('.py'):
+                lexer = lexers.PythonLexer()
+            elif name.endswith(('.cc', '.ph', '.h')):
+                lexer = lexers.CppLexer()
+            elif name.endswith(('.c',)):
+                lexer = lexers.CLexer()
+            else:
+                lexer = lexers.TextLexer()
+            
+            # Highlight code
+            highlighted = highlight(
+                code, lexer, HtmlFormatter(cssclass="codehilite", style="pastie", linenos='table')
+            )
+            
+            # Convert to xml
+            root = etree.fromstring(highlighted)
+            
+            # Add to parent
+            output_parent.extend(root)
+    
+    trans.register_element('http://gridgroup.eia-fr.ch/popc', 'highlighted', Highlighter())
+    
     destination = os.path.join(host_shared, name, 'report')
 
     shutil.rmtree(destination, True)
     shell.local("mkdir -p {0}".format(destination))
 
-    pattern = os.path.join(host_shared, name, "*", "simple.lo.decoded.xml")
-
+    pattern = os.path.join(host_shared, name, "*", "*.decoded.xml")
+    
+    print pattern
+    
     for source in glob.glob(pattern):
-        dest = os.path.join(destination, 'index.html')
+        base, measure = os.path.split(source)
+        interface = measure.rsplit('.', 3)[1]
+        ip = os.path.basename(base).replace('.', '-')
+        dest = os.path.join(destination, '{0}_{1}.html'.format(ip, interface))
         trans.transform(source, dest)
         
         # Tidy
@@ -346,23 +455,25 @@ def report(name):
         
         # break after the first one
         # @TODO: Assemble all resources
-        break
 
     # Copy resources
     htdocs = os.path.join(os.path.dirname(conf.__file__), 'htdocs')
     
-    shutil.copytree(
-        os.path.join(htdocs, 'styles'),
-        os.path.join(destination, 'styles')
-    )
-    shutil.copytree(
-        os.path.join(htdocs, 'images'),
-        os.path.join(destination, 'images')
-    )
-    shutil.copytree(
-        os.path.join(htdocs, 'scripts'),
-        os.path.join(destination, 'scripts')
-    )
+    shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'styles'), os.path.join(destination, 'styles')))
+    shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'images'), os.path.join(destination, 'images')))
+    shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'scripts'), os.path.join(destination, 'scripts')))
+    #shutil.copytree(
+    #    os.path.join(htdocs, 'styles'),
+    #    os.path.join(destination, 'styles')
+    #)
+    #shutil.copytree(
+    #    os.path.join(htdocs, 'images'),
+    #    os.path.join(destination, 'images')
+    #)
+    #shutil.copytree(
+    #    os.path.join(htdocs, 'scripts'),
+    #    os.path.join(destination, 'scripts')
+    #)
 
 
 
