@@ -176,19 +176,17 @@ be known.
 (i.e. on a guest or on a remote machine) invocations.
 
 Remote invocations
-
    For remote invocations the path is set to the measure case base directory
    (i.e. a ``cd`` to ``ENV_BASE/cases/<case-name>`` is done).
    
    Additionally the ``ENV_BASE`` environment variable is set to the specific
-   environment base location on the remote host as read from the :data1:`PATHS 
+   environment base location on the remote host as read from the :data:`PATHS 
    <pas.conf.basesettings.PATHS>` settings directive.
    
    Remote invocations are executed by the :mod:`pas run <pas.commands.run>` and
    :mod:`pas execute <pas.commands.execute>` commands.
 
 Local invocations
-
    For local invocations the path is left untouched, but both the
    ``ENV_BASE`` and ``EXEC`` environment variables are set and the ``-e`` flag
    passed to ``make`` in order to let environment variables override local

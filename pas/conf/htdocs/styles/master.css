@@ -425,7 +425,7 @@ body > nav > ul:nth-child(2) > li.active {
 
 /* line 3, ../sass/_code.sass */
 .file-browser {
-  font-family: "Espresso Mono";
+  font-family: "Espresso Mono", "Courier", "Courier New";
 }
 /* line 7, ../sass/_code.sass */
 .file-browser > ul {
@@ -771,7 +771,7 @@ body > nav > ul:nth-child(2) > li.active {
   vertical-align: bottom;
   padding-bottom: 20px;
   padding-right: 1px;
-  font-family: "Espresso Mono";
+  font-family: "Espresso Mono", "Courier", "Courier New";
   color: #888888;
   text-shadow: 0 1px 0 white;
   font-size: 11px;
@@ -849,7 +849,7 @@ body > nav > ul:nth-child(2) > li.active {
   width: 100%;
   color: #444444;
   padding: 8px 7px;
-  font-family: "Espresso Mono";
+  font-family: "Espresso Mono", "Courier", "Courier New";
 }
 /* line 124, ../sass/transactions/_transactions.sass */
 .transactions .transaction span {
