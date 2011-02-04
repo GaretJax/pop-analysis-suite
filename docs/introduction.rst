@@ -85,7 +85,7 @@ You should obtain an incorrect usage error similar to the following::
 Install from source
 ~~~~~~~~~~~~~~~~~~~
 
-It is possible to install the PAs package directly from source. The following
+It is possible to install the PAS package directly from source. The following
 commands should get you started::
 
    $ wget --no-check-certificate https://github.com/GaretJax/pop-analysis-suite/tarball/master

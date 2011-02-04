@@ -96,7 +96,7 @@ text will be printed during the execution::
    Progress: 1% (5288808 / 502810112)
 
 Vagrant is now probably downloading the virtual machine box to your system.
-This process and the provisions process described below take a neat amount of
+This process and the provisioning process described below take a neat amount of
 time so it could be a good time to take a coffee break.
 
 Once a machine is downloaded and booted, vagrant begins the "provisioning 
