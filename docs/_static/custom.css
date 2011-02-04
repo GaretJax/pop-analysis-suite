@@ -116,6 +116,28 @@ div.footer + hr {
     margin-bottom: 0;
 }
 
+.section .figure.align-left {
+	margin-right: 30px;
+	margin-bottom: 10px;
+	text-align: left;
+}
+.section .figure img {
+	border: 1px solid #ccc;
+	padding: 3px;
+}
+.section .figure.clear.align-left {
+	clear: both;
+	float: none;
+}
+.section .figure .caption {
+	font-size: 0.9em;
+	font-style: italic;
+	margin-top: 3px;
+}
+
+.section h2, .section h3 {
+	clear: both;
+}
 
 /* +Notes */
 div.note {

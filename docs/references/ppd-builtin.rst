@@ -18,7 +18,9 @@ The set of provided scalars include:
    A simple ``parocstring`` XDR compatible decoder.
 
 .. c:type:: uint
+
 .. c:type:: int
+
 .. c:type:: float
 
 .. c:type:: popbool
@@ -116,34 +118,9 @@ The set of provided complex and compound types include:
 
 .. c:type:: POPCSearchNode
 
-   .. c:member:: float nodeid01
-   .. c:member:: float nodeid02
-   .. c:member:: float nodeid03
-   .. c:member:: float nodeid04
-   .. c:member:: float nodeid05
-   .. c:member:: float nodeid06
-   .. c:member:: float nodeid07
-   .. c:member:: int nodeid08
-   .. c:member:: string nodeid09
-   .. c:member:: float nodeid10
-   .. c:member:: float nodeid11
-   .. c:member:: uint nodeid12
-   .. c:member:: int nodeid13
-   .. c:member:: int nodeid14
-   .. c:member:: int nodeid15
-   .. c:member:: int nodeid16
-   .. c:member:: int nodeid17
-   .. c:member:: int nodeid18
-   .. c:member:: int nodeid19
-   .. c:member:: int nodeid20
-   .. c:member:: int nodeid21
-   .. c:member:: int nodeid22
-   .. c:member:: int nodeid23
-   .. c:member:: string nodeid24
-   .. c:member:: int nodeid25
-
-   .. todo::
-      Define the semantics of the members
+   .. c:member:: ObjectDescription od
+   .. c:member:: accesspoint accesspoint
+   .. c:member:: int refcount
 
 .. c:type:: POPCSearchNodeInfo
 
@@ -158,7 +135,7 @@ The set of provided complex and compound types include:
    .. c:member:: string encoding
 
 Classes
-~~~~~~~
+-------
 
 The set of provided classes include:
 

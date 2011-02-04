@@ -12,19 +12,8 @@ positional arguments:
 optional arguments:
   -h, --help   Show this help message and exit.
 
-Generates an HTML report for the already collected, converted, simplified and
-decoded measure named ``MEASURE``.
-
-.. todo::
-   Assemble all resources (not only one measure file) in the final report.
-   Include things such as popc logs, different measures, highlighted source
-   code,...
-   
-.. todo::
-   Check syntax of all commands as they changed slightly
-
-.. todo::
-   Conditionally invoke tidy.
+Generates an HTML report for each already collected, converted, simplified and
+decoded measure files of the measure named ``MEASURE``.
 """
 
 

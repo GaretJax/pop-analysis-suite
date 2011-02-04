@@ -5,9 +5,6 @@
 Quick start
 ===========
 
-.. todo::
-   Check the command syntax and that this process really works
-
 The steps contained in this short guide should get you up and running in as few
 steps as possible. For a full featured environment and for an in-dept
 description of all the functionalities of the ``pas`` packages, refer to the
@@ -28,9 +25,9 @@ Step 1: Setup the test environment
 To run a measure, a test environment has to be setup. Fortunately this can
 easily be done using the ``init`` command.
 
-The init command tries to create a new environment in the current directory
-(and will only succeed if it is empty) or using the path provided on the
-command line. Use it in the following way::
+The init command tries to create a new environment in the current directory or
+using the path provided on the command line and will only succeed if it is
+empty. Use it in the following way::
 
    $ pas init <path-to-the-env>
    Attempting to create a new environment in '<path-to-the-env>'...
@@ -60,9 +57,9 @@ The entries in the listing have the following roles:
    Especially noteworthy is the ``chef`` subdirectory which holds the full VM
    configuration scripts. Also contained in this directory are the ``xsl``
    templates used for the measure simplification and report generation and a
-   base ``makefile`` to facilitate the creation of measure cases.
+   base ``Makefile`` to facilitate the creation of measure cases.
 
- * ``contrib``: Contributed assets and sourced to be used inside the
+ * ``contrib``: Contributed assets and sources to be used inside the
    environment. Already contained in this directory is a patched pop-c++
    version to avoid raw encoded communications.
 
@@ -70,7 +67,7 @@ The entries in the listing have the following roles:
    reports.
 
  * ``settings.py``: An environment specific configuration file to allow to
-   override system-wide settings directives.
+   override the default settings directives.
 
 .. note::
 
@@ -98,6 +95,10 @@ text will be printed during the execution::
    [master] Copying box to temporary location...
    Progress: 1% (5288808 / 502810112)
 
+Vagrant is now probably downloading the virtual machine box to your system.
+This process and the provisions process described below take a neat amount of
+time so it could be a good time to take a coffee break.
+
 Once a machine is downloaded and booted, vagrant begins the "provisioning 
 process", which simply means to copy the required chef recipes and resources
 to the VM and to execute the set of defined actions to configure the host.
@@ -105,9 +106,12 @@ to the VM and to execute the set of defined actions to configure the host.
 Once the complete process is finished, you have two running headless virtual
 machines ready to execute pop-c services and objects.
 
-You can play with them through ``ssh``. To connect simply issue::
 
-   $ vagrant ssh master # s/master/slave/ if you want to connect to the slave instead
+.. note::
+   You can play with the virtual machines through ``ssh``. To connect simply
+   issue::
+
+      $ vagrant ssh master # s/master/slave/ if you want to connect to the slave instead
 
 
 Step 3: Run the measure
@@ -122,31 +126,32 @@ compile it on each virtual machine. To do so, issue the following command::
 
    $ pas compile
 
-The ``compile`` subcommand asks you to choose the measure to compile (if there
-is more than one choice) or, alternatively, you can provide the name of the
-measure on the command line directly.
+If there is more than one possibility, the ``compile`` subcommand asks you to
+choose the measure to compile or, alternatively, you can provide the name of
+the measure on the command line directly.
 
-When run, the ``compile`` subcommand, automatically calls the default ``make``
+When ran, the ``compile`` subcommand, automatically calls the ``build`` ``make``
 target on each known host and makes sure to add the needed informations to a 
 global ``obj.map`` file.
 
 Once the sources are compiled, we are ready to run our measure. Measuring is
-done through a ``tshark`` instance per host. ``pas`` provides commands to start
-and stop ``tshark`` based measures on all or on selected hosts::
+done through one or more ``tshark`` instances per host. ``pas`` provides
+commands to start and stop ``tshark`` based measures on all or on selected
+hosts/interfaces::
 
-   $ pas measure start testmeasure
+   $ pas measure start
    
    Only one test case found: simple.
    [33.33.33.10] sudo: rm -rf /measures ; mkdir /measures   
-   [33.33.33.10] sudo: screen -dmS simple.lo.lo tshark -i lo -t e -w /measures/simple.lo.raw 'tcp and not tcp port 22'
-   [33.33.33.10] sudo: screen -dmS simple.eth1.eth1 tshark -i eth1 -t e -w /measures/simple.eth1.raw 'tcp and not tcp port 22'
+   [33.33.33.10] sudo: screen -dmS simple.lo.lo tshark -i lo -t e -w ...
+   [33.33.33.10] sudo: screen -dmS simple.eth1.eth1 tshark -i eth1 -t e ...
    [33.33.33.11] sudo: rm -rf /measures ; mkdir /measures
-   [33.33.33.11] sudo: screen -dmS simple.lo.lo tshark -i lo -t e -w /measures/simple.lo.raw 'tcp and not tcp port 22'
+   [33.33.33.11] sudo: screen -dmS simple.lo.lo tshark -i lo -t e -w ...
 
-The ``measure-start`` subcommand cleans up the measure destination directory on
-the target-host and starts a detached named screen session to wrap the ``tshark``
-process. This allows to let measures live between different connections and to
-terminate them by name.
+The ``pas measure start`` subcommand cleans up the measure destination
+directory on the target-host and starts a detached named screen session to wrap
+the ``tshark`` process. This allows to let measures live between different
+connections and to terminate them by name.
 
 Now that the measure daemon is running, we can start the ``jobmgr`` and the
 actual measure case.
@@ -171,7 +176,7 @@ Once been through these different steps and having waited for the measured
 program to terminated, the ``jobmgr``'s can be shut down and the measure
 terminated. In short, this comes back to the following two commands::
 
-   $ pas jobmgr stop ; pas measure stop testmeasure
+   $ pas jobmgr stop ; pas measure stop
 
 Congratulations, you just measured your first pop program using the POP
 Analysis Suite, but the work is not over yet; all of the assets resulting from
@@ -187,7 +192,7 @@ As anticipated above, all of the measures are still scattered over the
 different virtual machines. The first step which has to be done to generate a 
 report is to collect them in a unique place::
 
-   $ pas measure collect testmeasure
+   $ pas measure collect test_measure
 
 This command has the effect to gather all different measure files and place
 them in an appropriate tree structure inside the ``report`` directory. The
@@ -222,10 +227,13 @@ it run::
 
    $ pas report report
 
-To display the generated report in your browser, simply open the ``index.html``
-file found in the ``reports/<case-name>_<timestamp>/report`` directory.
+To display the generated report in your browser, simply open one of the 
+``html`` file files found in the ``reports/<measure-name>_<timestamp>/report``
+directory.
 
 Wow, this was the final step! Sounds like a complicated and tedious process but
 as you will see by reading the rest of the documentation, much of all this can
-be automated, allowing to produce a complete report with a single command.
+be automated, allowing to produce a complete report with a single command;
+hand over to the guide on :ref:`composed commands <composed-commands>` to find
+out how.
 

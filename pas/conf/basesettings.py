@@ -134,7 +134,7 @@ PATHS = {
 }
 """
 General path configuration. Contains a mapping between symbolic path name (i.e.
-``test-cases`` tuple of its local (i.e. ``cases``) and remote (i.e.
+``test-cases``) to a tuple of its local (i.e. ``cases``) and remote (i.e.
 ``/share/test-cases``) equivalent.
 
 With the exception of the ``local-meaures`` entry, these path are all shared

@@ -2,21 +2,14 @@
 ``pas measure stop``
 ====================
 
-**Usage:** ``pas jobmgr stop [-h] MEASURE_NAME``
-
-positional arguments:
-   .. cmdoption:: MEASURE_NAME
-
-      The name of the measure to stop.
+**Usage:** ``pas jobmgr stop [-h]``
 
 optional arguments:
   -h, --help   Show this help message and exit.
 
-Stops all the measures on the different interfaces named ``MEASURE_NAME`` on all
-hosts as defined by the ``INTERFACES`` and ``ROLES`` settings directives.
-
-.. todo::
-   Link to the settings reference.
+Stops the measures running on all hosts and for each interface as defined in
+the :data:`INTERFACES <pas.conf.basesettings.INTERFACES>` and :data:`ROLES
+<pas.conf.basesettings.ROLES>` settings directives.
 
 The measures are stopped by sending the ``quit`` command to each named screen
 session which matches the MEASURE_NAME and interface couple.
@@ -33,16 +26,11 @@ from pas import measure
 # documentation.
 
 
-def getparser(parser):
-    parser.add_argument('name', metavar='MEASURE_NAME', help="The name of " \
-                        "the measure to stop.")
-
-
 def command(options):
     """
-    Stops all the measures on the different interfaces named MEASURE_NAME on all
-    hosts as defined by the INTERFACES and ROLES settings directives.
+    Stops the measures running on all hosts and for each interface as defined in
+    the INTERFACES and ROLES settings directives.
     """
-    measure.stop(options.name)
+    measure.stop('pas')
 
 

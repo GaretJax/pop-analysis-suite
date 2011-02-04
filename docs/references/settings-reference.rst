@@ -1,3 +1,5 @@
+.. _settings reference:
+
 Settings reference
 ==================
 

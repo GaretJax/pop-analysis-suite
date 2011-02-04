@@ -1,3 +1,5 @@
+.. _usage:
+
 Usage documentation
 ===================
 
@@ -7,4 +9,5 @@ Usage documentation
    execution-model
    measure-cases
    configuration
+   composing-commands
    report

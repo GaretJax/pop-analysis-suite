@@ -7,10 +7,6 @@ This section is dedicated to the description of the usage and the effects of
 the different commands and subcommands bundled with the ``pas`` command line
 tool.
 
-.. todo::
-   Double check all commands syntax and their effective inclusion in this
-   document.
-
 The main ``pas`` command
 ------------------------
 
@@ -71,20 +67,54 @@ and options and to the documentation of all built-in subcommands, respectively.
 Common arguments and options
 ----------------------------
 
-.. todo::
-   Document the ``--settings`` option.
+.. _settings options:
 
-.. todo::
-   Document the ``--verbose`` option.
+``--settings``
+~~~~~~~~~~~~~~
 
-.. todo::
-   Document the ``--quiet`` option.
+The settings option lets you define the path to a directory containing the
+``settings`` module (simply a ``settings.py`` file). This module is needed
+by some commands to correctly identify a working environment.
 
-.. todo::
-   Document the ``--host`` option and the ``HOST`` argument.
+It is possible to use this option when invoking a command from outside the
+environment working directory.
 
-.. todo::
-   Document the ``MEASURE_CASE`` argument.
+It is also possible to set the path in the ``PAS_SETTINGS_MODULE`` shell
+environment variable instead.
+
+``--verbose`` and ``--quiet``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These flags increment and decrement the verbosity respectively and can be used
+multiple times.
+
+The short version ``-v`` and ``-q`` flags are also available.
+
+``--host`` and ``[HOST]``
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The host option or its argument alternative syntax are not a general ``pas``
+argument but are used often enough by subcommands to being worth to be
+documented here.
+
+Many subcommands execute actions on remote machines. By default these actions
+are carried out on a predefined list of hosts (normally all or all members of
+a given role). Using this argument or the respective option variant, it is
+possible to explicitly define one ore more hosts on which executed the command.
+
+Both variants can be used multiple times to provide more than one host.
+
+``MEASURE_CASE``
+~~~~~~~~~~~~~~~~
+
+A similar argument as made for the inclusion of the ``host`` argument or option
+in this section can be made for the ``MEASURE_CASE`` argument too.
+
+The ``MEASURE_CASE`` argument takes the name of a measure case from the cases
+directory. In most cases the value is then coerced to a valid value using the
+:func:`pas.commands.select_case` command decorator, which means that the value
+can also be left out and the subcommand will prompt the user to select the 
+desired value from a list of choices.
 
 
 Built-in subcommands
@@ -124,6 +154,8 @@ per-environment basis.
 .. automodule:: pas.commands.report.decode
 
 .. automodule:: pas.commands.report.report
+
+.. automodule:: pas.commands.run
 
 
 Custom subcommands

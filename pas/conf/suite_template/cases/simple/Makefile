@@ -1,12 +1,10 @@
-include $(ENV_BASE)/conf/Makefile.base
-
 MEASURE_NAME=$(EXEC)
 
 run:
 	$(call header,Running measure)
 
 	@echo "\n 1. Starting measures and services"
-	@pas measure start $(MEASURE_NAME) $(INDENT)
+	@pas measure start $(INDENT)
 	@pas jobmgr start $(INDENT)
 	@echo "    OK."
 
@@ -16,7 +14,7 @@ run:
 
 	@echo "\n 3. Stopping measures and services"
 	@pas jobmgr stop $(INDENT)
-	@pas measure stop $(MEASURE_NAME) $(INDENT)
+	@pas measure stop $(INDENT)
 	@echo "    OK."
 
 	@echo "\n 4. Collecting results"
@@ -44,3 +42,5 @@ report:
 	@echo "\n 4. Generating report"
 	@pas report report $(MEASURE_NAME) $(INDENT)
 	@echo "    OK."
+
+include $(ENV_BASE)/conf/Makefile.base

@@ -12,12 +12,12 @@ class cls(object):
     
     :param id: The classid to which this class will be mapped.
     :param name: The name to use as string representation of this class.
-                 Normally its always the original class name.
+                 Normally its the original class name.
     :param methods: The list of methods bound to an instance of this class.
     
     :type id: int
     :type name: ``str`` or ``unicode`` compatible object
-    :type methods: list of :ref:`pas.parser.types.func` objects
+    :type methods: list of :func:`pas.parser.types.func` objects
     """
     def __init__(self, id, name, methods):
         self.id = id
@@ -331,31 +331,9 @@ Response = compound('Response',
 
 
 POPCSearchNode = compound('POPCSearchNode_UnknownSerializationFormat',
-    ('nodeid01', float),
-    ('nodeid02', float),
-    ('nodeid03', float),
-    ('nodeid04', float),
-    ('nodeid05', float),
-    ('nodeid06', float),
-    ('nodeid07', float),
-    ('nodeid08', int),
-    ('nodeid09', string),
-    ('nodeid10', float),
-    ('nodeid11', float),
-    ('nodeid12', uint),
-    ('nodeid13', int),
-    ('nodeid14', int),
-    ('nodeid15', int),
-    ('nodeid16', int),
-    ('nodeid17', int),
-    ('nodeid18', int),
-    ('nodeid19', int),
-    ('nodeid20', int),
-    ('nodeid21', int),
-    ('nodeid22', int),
-    ('nodeid23', int),
-    ('nodeid24', string),
-    ('nodeid25', int)
+    ('od', ObjectDescription),
+    ('accesspoint', accesspoint),
+    ('refcount', int)
 )
 
 

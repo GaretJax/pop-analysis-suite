@@ -16,7 +16,7 @@ import os
 import sys
 
 
-__all__ = ['settings', 'loadsettings', 'all_hosts', 'role', 'map_interfaces']
+__all__ = ['settings', 'all_hosts', 'role', 'map_interfaces']
 
 
 class Settings(object):

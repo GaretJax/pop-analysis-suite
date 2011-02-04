@@ -24,11 +24,8 @@ Decodes the results of an already collected and simplified measure by
 annotating the XML structure with the needed POP metadata, as extracted from
 the TCP payload.
 
-The decoding additional custom types can be defined on a per-environment basis.
-
-.. todo::
-   Document and link to the custom types + settings directive parser extension 
-   model.
+The decoding of additional custom types can be defined on a per-measure-case
+basis and is bast described in the :ref:`parser DSL <ppd-reference>` document.
 
 If ``MEASURE`` is not provided, the user is presented with a list of already
 collected measures and asked to make a choice.

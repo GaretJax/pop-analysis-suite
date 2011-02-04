@@ -24,12 +24,9 @@ Processing
 
 A fifth group, the **derived commands** group can also be added and contains
 all custom defined workflows resulting from the chaining of different
-"primitive" commands.
-
-.. todo::
-   Make sure this is actually possible, the current implementation does not
-   provide hooks or facilities to work on composite commands. OK
-   Instead document how to compose commands inside makefiles
+"primitive" commands. This form of custom command creation was already
+described in the :ref:`command composition <composed-commands>` section of the
+first chapter.
 
 
 .. _architecture:
@@ -42,9 +39,9 @@ The various available commands are gathered at runtime by the ``pas`` binary
 recursively scans the ``pas.commands`` package to retrieve the various commands.
 
 This mechanism allows for great flexibility in the definition of parsers for 
-single commands and makes the addition of a new command relatively easy.
+single commands and makes the addition of new commands relatively easy.
 
-The next chapter will show you how to create a new command by adding it
+The next section will show you how to create a new command by adding it
 directly to the ``pas`` package.
 
 
@@ -57,14 +54,15 @@ suppose we want to add a new command to the pas utility (i.e. a command to list
 all collected measures with no report), then we want to proceed as follows:
 
  1. Create a new python module inside the ``pas.commands`` package. Name it as
-    you want to name your command. We want out command to be named
-    ``unreported``, so we create the ``pas/commands/unreported.py`` file.
+    you want to name your command. As we want our command to be named
+    ``unreported``, we create the ``pas/commands/unreported.py`` file.
     
     **Note:** Filenames starting with underscores are automatically filtered
     out.
     
-    If you run the ``pas`` utility, then an error is reported indicating that
-    you don't have implemented the command correctly::
+    If you run the ``pas`` utility with the ``unreported`` subcommand, then an
+    error is reported indicating that you don't have implemented the command
+    correctly::
     
       $ pas unreported
            ERROR: No command found in module pas.commands.unreported
@@ -79,7 +77,7 @@ all collected measures with no report), then we want to proceed as follows:
     
       # Inside pas/commands/unreported.py
       
-      def command(option):
+      def command(options):
          pass
     
     If you run the command now, it should exit cleanly without any message, but
@@ -111,18 +109,19 @@ all collected measures with no report), then we want to proceed as follows:
           for i, path in enumerate(not_reported):
               print "{0:2d}: {1}".format(i+1, os.path.basename(path))
 
- 3. Suppose we want to allow the newly created subcommand to accept some
+ 3. Suppose we want now to allow the newly created subcommand to accept some
     optional (or required) flags and arguments; how can we add support for
     additional command line parsing to the current implementation?
     
     Fortunately the whole ``pas`` commands subsystem is based around the 
     `argparse <http://docs.python.org/dev/library/argparse.html>`_ module and
     adding options and arguments is straightforward. The ``pas`` command line
-    parser builder looks if the module containing a command contains a
-    callable named ``getparser`` and if it is the case it calls it passing the
-    subcommand specific subparser instance to it.
+    parser builder looks if the module containing the command also contains a
+    callable named ``getparser`` and, if it is the case, it calls it during the
+    parser construction by passing the subcommand specific subparser instance
+    to it.
     
-    If we want to add a flag allowing to turn off the list of unreported
+    If we want to add a ``--no-list`` flag allowing to turn off the list of unreported
     measures (thus only showing the total counts), we can proceed as follows::
     
       import os
@@ -142,8 +141,8 @@ all collected measures with no report), then we want to proceed as follows:
 
     Refer to the `argparse`_ documentation for the syntax and the usage of the
     module (just remember that the ``parser`` argument of the ``getparser``
-    function is an ``ArgumentParser`` instance and the ``options`` argument
-    passed to the command is a ``Namespace`` instance).
+    function is an ``argparse.ArgumentParser`` instance and the ``options``
+    argument passed to the command is an ``argparse.Namespace`` instance).
 
 The example illustrated above covers the basics of creating a new subcommand
 for the ``pas`` command line utility, but some more techniques allows to
@@ -166,7 +165,7 @@ These three actions are defined as subcommands of the ``jobmgr`` subcommand.
 
 To create a similar grouping structure for your commands collection, it
 suffices to define your actions as modules inside a package named after the
-collection name.
+commands collection name.
 
 To reproduce a structure as the one implemented by the ``jobmgr`` command, the
 following directory structure may be set up::
@@ -204,15 +203,15 @@ External directory scanning
 
 The main weak point of the architecture as it was presented until now is
 certainly the fact that for the parser to recognize a new command, the command
-itself has to be placed inside the ``pas.commands`` package.
+itself has to be placed inside the ``pas.commands`` package which, depending on
+the installation, is buried deeply somewhere in the file system and is easily
+overridden by a reinstallation.
 
 Fortunately, a mechanism has been put in place to allow arbitrary directories
-to be scanned for commands: the COMMAND_DIRECTORIES settings directive is a
-list of directories to be scanned for commands *in addition* to the
-``pas.commands`` package.
-
-.. todo::
-   Link to the settings documentation.
+to be scanned for commands: the
+:data:`COMMAND_DIRECTORIES <pas.conf.basesettings.COMMAND_DIRECTORIES>`
+settings directive contains a list of directories to be scanned for commands
+*in addition* to the ``pas.commands`` package.
 
 By adding your custom commands directory to the list you can have them
 automatically included in the ``pas`` utility without the need to modify the

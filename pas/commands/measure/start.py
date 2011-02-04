@@ -2,25 +2,14 @@
 ``pas measure start``
 =====================
 
-**Usage:** ``pas jobmgr start [-h] MEASURE_NAME``
-
-positional arguments:
-   .. cmdoption:: MEASURE_NAME
-
-      The name to give to the newly started measure.
+**Usage:** ``pas jobmgr start [-h]``
 
 optional arguments:
   -h, --help   Show this help message and exit.
 
 Starts a new measure on all hosts and for each interface as defined in the
-settings ``INTERFACES`` and ``ROLES`` directives.
-
-.. todo::
-   Link to the settings reference.
-   
-.. todo::
-   Is the measure name parameter really necessary? We can only run one measure
-   at a time.
+:data:`INTERFACES <pas.conf.basesettings.INTERFACES>` and :data:`ROLES
+<pas.conf.basesettings.ROLES>` settings directives.
 
 The measure is started in a detached named screen session to be able to
 disconnect from the remote host while letting the measure run. The same name
@@ -44,16 +33,11 @@ from pas import measure
 # documentation.
 
 
-def getparser(parser):
-    parser.add_argument('name', metavar='MEASURE_NAME', help="The name to " \
-                        "give to the newly started measure.")
-
-
 def command(options):
     """
     Starts a new measure on all hosts as defined in the settings INTERFACES and
     ROLES directives.
     """
-    measure.start(options.name)
+    measure.start('pas')
 
 

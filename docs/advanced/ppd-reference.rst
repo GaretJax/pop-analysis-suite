@@ -4,12 +4,12 @@ POP Parsing DSL
 ===============
 
 The informations transmitted in the POP encoded messages don't include the type
-of the transmitted values as this is defined at compilation time and known to
+of the transmitted values as these are defined at compilation time and known to
 both involved parties.
 
 With the use of python and the need to decode message exchanges between
-arbitrary peers, information about the transmitted values data-types has to be
-provided somehow.
+arbitrary peers, information about the transmitted values data-types is not
+available and has to be provided somehow.
 
 The implemented python based parser for POP messages introduces the concept of
 a *types registry*. Each time a message has to be decoded, the specific types
@@ -21,7 +21,7 @@ As the measuring of arbitrary programs introduces new classes, methods and data
 types, it does not suffice to provide a built-in set of known data types and
 the need to let the final ``pas`` user specify custom and complex types arises.
 
-For this purpose a special python-based syntax domain specific language as been
+For this purpose a special python-based domain specific language as been
 defined. The DSL builds upon a few directives to be able to define primitive
 types (rarely needed), complex types and new classes and to register them to
 the registry in order to let the parser retrieve them when needed.
@@ -77,8 +77,8 @@ is the following::
 By reading the preceding snippet, a few observations can be made:
 
  1. Not all methods are defined. In fact, the parser doesn't care if the object
-    is fully defined until it doesn't receive a request or a response for an
-    inexistent method ID.
+    is fully defined or not until it doesn't receive a request or a response
+    for an inexistent method ID.
 
  2. Methods can return multiple values. The first return value is always
     mapped to the C++ return value (if non-``void``), while the following
@@ -105,19 +105,20 @@ method:
 
    conc async void callbackResult(Response resp);
 
-As you might noticed, it takes a ``Response`` object as argument, so a possible
-definition using the parser DSL syntax would be::
+As you might have noticed, it takes a ``Response`` object as argument, so a
+possible definition using the parser DSL syntax would be::
 
    cls(1001, 'POPCSearchNode', [
        # ...other methods here...
        func(38, 'callbackResult', [Response], []),
    ])
    
-But how is the ``Response`` object defined and how the parser knows how to
+But how is the ``Response`` object defined and how does the parser know how to
 decode it? The ``Response`` object is what in the python parser domain is
-called a compound type and fortunately its definition is much easier than you
-might think; we know that a ``Response`` object is composed by a ``string``, a
-``NodeInfo`` object and an ``ExplorationList`` object, so its definition is::
+called a :term:`compound type` and fortunately its definition is much easier
+than you might think; we know that a ``Response`` object is composed by a
+``string``, a ``NodeInfo`` object and an ``ExplorationList`` object, so its
+definition becomes::
 
    Response = compound('Response',
        ('uid', string),
@@ -131,7 +132,8 @@ This example introduced two new concepts:
     on a list of (``name``, ``type``) tuples;
  
  2. Nested compound objects definition. A compound object can further contain
-    compound objects.
+    compound objects (the preceding snippet contains ``NodeInfo`` and
+    ``ExplorationList`` as subtypes).
 
 If we look deeper in detail, we'll see that the ``ExplorationList`` object
 isn't actually a compound object, but rather a list of compound objects.
@@ -169,7 +171,7 @@ scalars into more complex structure in different ways.
 The last building block needed to fully grasp the parsing details is the
 decoding of scalars. It is here that the real work happens, as complex or
 compound types only arrange scalars in different orders to decode a full
-structure but don't tell them *how* to decode the single values.
+structure, but don't tell them *how* to decode the single values.
 
 New scalar types are not needed as much as new complex types, but it can
 serve to better understand the whole parsing process as well. Furthermore it

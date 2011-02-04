@@ -36,3 +36,7 @@ Glossary
    measure
    measures
       The results of a measure case which has been run.
+      
+
+.. todo::
+   Add more terms to the glossary

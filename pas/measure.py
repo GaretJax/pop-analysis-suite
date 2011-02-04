@@ -440,8 +440,6 @@ def report(name, measure_case):
 
     pattern = os.path.join(host_shared, name, "*", "*.decoded.xml")
     
-    print pattern
-    
     for source in glob.glob(pattern):
         base, measure = os.path.split(source)
         interface = measure.rsplit('.', 3)[1]
@@ -452,28 +450,28 @@ def report(name, measure_case):
         # Tidy
         tconf = "conf/tidy/tidy.conf"
         shell.local('tidy -config {1} -o {0} {0} || true'.format(dest, tconf))
-        
-        # break after the first one
-        # @TODO: Assemble all resources
 
     # Copy resources
     htdocs = os.path.join(os.path.dirname(conf.__file__), 'htdocs')
     
-    shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'styles'), os.path.join(destination, 'styles')))
-    shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'images'), os.path.join(destination, 'images')))
-    shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'scripts'), os.path.join(destination, 'scripts')))
-    #shutil.copytree(
-    #    os.path.join(htdocs, 'styles'),
-    #    os.path.join(destination, 'styles')
-    #)
-    #shutil.copytree(
-    #    os.path.join(htdocs, 'images'),
-    #    os.path.join(destination, 'images')
-    #)
-    #shutil.copytree(
-    #    os.path.join(htdocs, 'scripts'),
-    #    os.path.join(destination, 'scripts')
-    #)
+    #shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'styles'), 
+    #   os.path.join(destination, 'styles')))
+    #shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'images'), 
+    #   os.path.join(destination, 'images')))
+    #shell.local("ln -s {0} {1}".format(os.path.join(htdocs, 'scripts'),
+    #   os.path.join(destination, 'scripts')))
+    shutil.copytree(
+        os.path.join(htdocs, 'styles'),
+        os.path.join(destination, 'styles')
+    )
+    shutil.copytree(
+        os.path.join(htdocs, 'images'),
+        os.path.join(destination, 'images')
+    )
+    shutil.copytree(
+        os.path.join(htdocs, 'scripts'),
+        os.path.join(destination, 'scripts')
+    )
 
 
 

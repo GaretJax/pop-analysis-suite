@@ -16,6 +16,9 @@ Collects the results of a measure by copying the remote files resulting from
 the last run measure to the local measures folder and by organizing them by
 host ip address.
 
+In addition to the measures, the log files specified by the :data:`LOG_FILES
+<pas.conf.basesettings.LOG_FILES>` settings directive are also copied.
+
 This process does not alter the remote files, it is thus possible to repeat a 
 ``collect`` command different times until a new measure is not started.
 """

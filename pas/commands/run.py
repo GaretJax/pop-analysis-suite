@@ -1,12 +1,26 @@
 """
 ``pas run``
-=================
+===========
 
-**Usage:** ``pas run [-h]``
+**Usage:** ``pas run [-h] [MEASURE_CASE] [TARGET [TARGET ...]]``
+
+positional arguments:
+   .. cmdoption:: MEASURE_CASE
+      
+      The name of the measure case of which run the ``Makefile``.
+   
+   .. cmdoption:: TARGET
+      
+      The target to execute, defaults to the default ``Makefile`` target.
 
 optional arguments:
   -h, --help  Show this help message and exit.
 
+Locally runs the given targets of the ``Makefile`` of the given measure case.
+
+This command is useful to create custom commands by simply combining multiple
+togheter. Refer to the :ref:`composing commands <composed-commands>` section
+for more informations about this argument.
 """
 
 import os

@@ -11,13 +11,16 @@ network analysis for the Parallel Object Programming protocol.
 
 The tool allows to start POP-C++ nodes, run measure cases, capture the traffic
 and produce a complete report of the exchanged TCP packets between the peers.
+
 By default, the test infrastructure is set up using vagrant and some virtual
 machines automatically configured using chef, but it is possible to use any
-remote machine as soon as an ssh access is available and the required
-dependencies installed.
+remote machine with ssh access and some configuration work (involving mainly
+installing the needed dependencies and creating some shared folders).
 
-.. todo::
-   Add a section about usage without VMs.
+Although this tool was developed especially for the C++ implementation of the
+POP model, it was conceived to make as less assumptions as possible about the
+underlying implementation and could easily be adapted to measure POP objects
+offered by other implementations such, for example, as POP-Java
 
 Further information about the POP-C++ project and the POP model can be found on
 the `project's homepage <http://gridgroup.hefr.ch/popc/>`_.
@@ -26,18 +29,10 @@ the `project's homepage <http://gridgroup.hefr.ch/popc/>`_.
 Requirements
 ------------
 
-.. todo::
-   Move the requirements and the installation subsections in a section on their
-   own inside the documentation part.
-   
-.. todo::
-   Add some simple instructions about setuptools and vagrant installation
-
 The requirements necessary to install and run the ``pas`` utility are the
 following:
 
- * Python 2.7 (although the whole package can easily be backported to Python
-   2.6) – http://python.org/;
+ * Python >= 2.6 – http://python.org/;
  * ``vagrant`` and VirtualBox to run the virtual machines
    – http://vagrantup.com/;
  * A webkit based browser (Safari, Google Chrome,...) to display the reports.
@@ -71,6 +66,11 @@ using ``easy_install`` or ``pip``::
 
    $ pip install https://github.com/GaretJax/pop-analysis-suite/tarball/master
 
+.. note::
+   Often, depending on the target system, the installation of a python package
+   requires ``root`` privileges. If the previous command fails, retry to run it
+   with ``sudo``.
+
 To check if the package was correctly installed, run the the ``pas`` command on
 the command line::
 
@@ -81,9 +81,6 @@ You should obtain an incorrect usage error similar to the following::
    usage: pas [-h] [--version] [-v] [-q] [--settings SETTINGS_MODULE]
               {authorize,execute,jobmgr,compile,init,measure} ...
    pas: error: too few arguments
-
-.. todo::
-   Add note about sudo + package removal
 
 Install from source
 ~~~~~~~~~~~~~~~~~~~
@@ -101,10 +98,12 @@ Setuptools
 ~~~~~~~~~~
 
 To install the PAS package, the setuptools package is required (for both source
-or remote installation modes). You can obtain further information about
-setuptools either on its
-`pypi project page <http://pypi.python.org/pypi/setuptools>`_ or on
-`the official homepage <http://peak.telecommunity.com/DevCenter/setuptools>`_.
+or remote installation modes). Albeit coming preinstalled on all major unix
+based operating systems you may need to install it. 
+
+You can obtain further information about ``setuptools`` either on its
+`pypi project page <http://pypi.python.org/pypi/setuptools>`_ or on its
+`official homepage <http://peak.telecommunity.com/DevCenter/setuptools>`_.
 
 
 Development
@@ -122,13 +121,38 @@ process.
 Structure of this manual
 ------------------------
 
-.. todo::
-   Describe the structure.
+This manual is conceived to offer an incremental approach to all feature which
+the ``pas`` has to offer. It is structured in three main parts:
 
-The present documentation is written using `Sphinx <http://sphinx.pocoo.org/>`_.
+ 1. The first part describes and documents the common usage of the tool, the
+    assumptions it mades about different aspects such as VM setups, object
+    communications, file locations and so on.
+    
+    Once read and understood this first part, a user should be able to complete
+    a full measure cycle with a custom developed measure case and generate a
+    report to further analyze.
 
-It can either be `read online <http://readthedocs.org/docs/pas/>`_ thanks to
-`readthedocs.org <http://readthedocs.org>`_ or built locally using ``sphinx``.
+ 2. The second part dives in the internals of the ``pas`` libraries and
+    documents topics such as command customization, custom type parsing or
+    complex measurement setups, useful if a user want to completely adapt the
+    offered functionalities to his needs.
+
+ 3. The third part contains reference documentation useful for both a basic or
+    an advanced usage. There are references for all built-in commands, for the
+    different settings directives or for more advanced topics such as the
+    internal APIs.
+
+This three parts are completed with this introduction, a glossary of common
+terms and an alphabetical content index.
+
+
+Building from source
+~~~~~~~~~~~~~~~~~~~~
+
+The present document is written using `Sphinx <http://sphinx.pocoo.org/>`_ and
+it can either be `read online <http://readthedocs.org/docs/pas/>`_ thanks to
+`readthedocs.org <http://readthedocs.org>`_ or built locally using the 
+``sphinx`` tool into various different formats.
 
 To create a local build, make sure to have the ``sphinx`` package installed and
 run the following commands::

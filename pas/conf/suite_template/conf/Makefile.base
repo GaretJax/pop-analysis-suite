@@ -40,7 +40,7 @@ cleanall: clean
 execute:
 	popcrun build/obj.map ./build/$(ARCH)/$(EXEC)
 
-reset:
+reset: cleanall
 	$(call header,Resetting measuring environment)
 	
 	@echo "\n 1. Killing all job managers"

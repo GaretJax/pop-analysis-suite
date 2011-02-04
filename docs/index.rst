@@ -10,11 +10,3 @@ PAS - POP Analysis Suite 0.1a
    advanced/index
    references/index
    glossary
-   todo
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-
